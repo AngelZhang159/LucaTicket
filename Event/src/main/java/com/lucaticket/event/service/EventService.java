@@ -12,6 +12,6 @@ public interface EventService {
 	 * @param eventoRequest
 	 * @return un DTO de respuesta de "evento" con datos de la creacion
 	 */
-	ResponseEntity<EventResponse> saveEvento(EventRequest eventoRequest);
+	ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest);
 	
 }
