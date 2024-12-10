@@ -29,17 +29,4 @@ public class EventResponse {
 
 	private Genre genre;
 
-	public static EventResponse toDto(Event event) {
-		EventResponse eventResponse = new EventResponse();
-
-		eventResponse.setName(event.getName());
-		eventResponse.setDescription(event.getDescription());
-		eventResponse.setEventDate(event.getEventDate());
-		eventResponse.setMinPrice(event.getMinPrice());
-		eventResponse.setMaxPrice(event.getMaxPrice());
-		eventResponse.setLocation(event.getLocation());
-		eventResponse.setGenre(event.getGenre);
-
-		return eventResponse;
-	}
 }
