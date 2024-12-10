@@ -46,5 +46,23 @@ class EventApplicationTests {
 			throw new AssertionError("No se pudo conectar con la base de datos.", e);
 		}
 	}
+	
+	//@Alberto
+	@Test
+	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
+		//Crear DTO con datos inválidos
+		EventoDTO invalidEvent = new EventDTO();
+		invalidEvent.setName(""); //nombre vacio
+		invalidEvent.setEventDate(null); //fecha nula
+		invalidEvent.setMinPrice(-5.0);//precio minimo negativo
+		
+		//verificar que se lanza excepcion
+		assertThrows(
+	            InvalidDataException.class, 
+	            () -> eventService.saveEvent(invalidEvent),
+	            "Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos."
+	        );
+	}
+	
 
 }
