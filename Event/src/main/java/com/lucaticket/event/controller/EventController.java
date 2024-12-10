@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class EventController {
 
     @Autowired
-    private final EventService eventService;
+    private EventService eventService;
 
     /*
      * @Olivord
