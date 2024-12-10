@@ -2,31 +2,60 @@ package com.lucaticket.event.model.dto;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.lucaticket.event.model.Event;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventRequest {
 
+	@NotNull
+	@NotEmpty
+	@Size(max = 20)
 	private String name;
 
+	@NotNull
+	@NotEmpty
+	@Size(max = 200)
 	private String description;
 
+	@NotNull
+	@NotEmpty
 	private LocalDateTime eventDate;
 
+	@NotNull
+	@NotEmpty
+	@Positive
 	private double minPrice;
 
+	@NotNull
+	@NotEmpty
+	@Positive
 	private double maxPrice;
 
+	@NotNull
+	@NotEmpty
+	@Size(max = 20)
 	private String location;
 
+	@NotNull
+	@NotEmpty
+	@Size(max = 20)
 	private String venueName;
 
+	@NotNull
+	@NotEmpty
 	private Genre genre;
 
 	public Event toEntity() {
