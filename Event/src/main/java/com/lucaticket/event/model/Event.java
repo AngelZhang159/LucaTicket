@@ -42,6 +42,7 @@ public class Event {
 		eventResponse.setMinPrice(this.minPrice);
 		eventResponse.setMaxPrice(this.maxPrice);
 		eventResponse.setLocation(this.location);
+		eventResponse.setVenueName(this.venueName);
 		eventResponse.setGenre(this.genre);
 
 		return eventResponse;
