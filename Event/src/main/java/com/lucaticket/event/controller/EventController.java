@@ -25,7 +25,7 @@ public class EventController {
      * Guarda el evento en la base de datos
      */
     @PostMapping
-    public ResponseEntity<EventoResponse> saveEvent(@RequestBody @Valid EventoRequest) {
+    public ResponseEntity<EventResponse> saveEvent(@RequestBody @Valid EventRequest) {
         Log.info("Guardando evento");
         Event newEvent = eventService.saveEvent(eventoRequest);
         return ResponseEntity.ok(newEvent);
