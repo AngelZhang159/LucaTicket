@@ -16,7 +16,7 @@ public class EventServiceImpl implements EventService {
 	EventRepository eventRepository;
 
 	@Override
-	public ResponseEntity<EventResponse> saveEvento(EventRequest eventoRequest) {
+	public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
 		return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
 	}
 
