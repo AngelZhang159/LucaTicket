@@ -2,7 +2,7 @@ package com.lucaticket.event.model.dto;
 
 import java.time.LocalDateTime;
 
-import com.lucaticket.event.model.Event;
+import com.lucaticket.event.model.enums.Genre;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
