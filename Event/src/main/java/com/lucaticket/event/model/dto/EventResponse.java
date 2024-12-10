@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 
 import com.lucaticket.event.model.Event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventResponse {
 
 	private String name;
@@ -25,17 +29,17 @@ public class EventResponse {
 
 	private Genre genre;
 
-	public EventResponse toDto() {
-		EventResponse event = new EventResponse();
+	public static EventResponse toDto(Event event) {
+		EventResponse eventResponse = new EventResponse();
 
-		event.setName(this.name);
-		event.setDescription(this.description);
-		event.setEventDate(this.eventDate);
-		event.setMinPrice(this.minPrice);
-		event.setMaxPrice(this.maxPrice);
-		event.setLocation(this.location);
-		event.setGenre(this.genre);
+		eventResponse.setName(event.getName());
+		eventResponse.setDescription(event.getDescription());
+		eventResponse.setEventDate(event.getEventDate());
+		eventResponse.setMinPrice(event.getMinPrice());
+		eventResponse.setMaxPrice(event.getMaxPrice());
+		eventResponse.setLocation(event.getLocation());
+		eventResponse.setGenre(event.getGenre);
 
-		return event;
+		return eventResponse;
 	}
 }
