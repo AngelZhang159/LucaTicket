@@ -77,6 +77,7 @@ class EventApplicationTests {
 		}
 	}
 	
+<<<<<<< HEAD
 	@Test
 	void saveEvent_should_return_saved_event() {
 //	<-- Atributos -->
@@ -96,5 +97,24 @@ class EventApplicationTests {
 		assertNotNull(result);
 		assertEquals("Galacticon", result.getBody().getName());
 	}
+=======
+	//@Alberto
+	@Test
+	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
+		//Crear DTO con datos inválidos
+		EventoDTO invalidEvent = new EventDTO();
+		invalidEvent.setName(""); //nombre vacio
+		invalidEvent.setEventDate(null); //fecha nula
+		invalidEvent.setMinPrice(-5.0);//precio minimo negativo
+		
+		//verificar que se lanza excepcion
+		assertThrows(
+	            InvalidDataException.class, 
+	            () -> eventService.saveEvent(invalidEvent),
+	            "Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos."
+	        );
+	}
+	
+>>>>>>> lt-35-pruebaUnitariaSaveEvent
 
 }
