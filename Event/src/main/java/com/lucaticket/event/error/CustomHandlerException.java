@@ -1,38 +1,16 @@
 package com.lucaticket.event.error;
 
- class ErrorDetails {
-    private int statusCode;
-    private String message;
-    private String details;
+@ControllerAdvice
+public class CustomHandlerException{
 
-    public ErrorDetails(int statusCode, String message, String details) {
-        this.statusCode = statusCode;
-        this.message = message;
-        this.details = details;
-    }
-
-    // Getters y setters.
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
+	
+	@ExceptionHandler(InvalidDataException.class)
+	public ResponseEntity<Object> handleInvalidDAtaException(InvalidDataException ex, WebRequest request){
+		ErrorDetails errorDetails = new ErrorDetails(
+				HttpStatus.BAD_REQUEST.value(),
+	            ex.getMessage(),
+	            request.getDescription(false)
+				)
+	}
+	
 }
