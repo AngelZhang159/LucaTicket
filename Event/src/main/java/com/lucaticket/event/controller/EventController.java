@@ -27,8 +27,7 @@ public class EventController {
     @PostMapping
     public ResponseEntity<EventResponse> saveEvent(@RequestBody @Valid EventRequest) {
         Log.info("Guardando evento");
-        Event newEvent = eventService.saveEvent(eventoRequest);
-        return ResponseEntity.ok(newEvent);
+        return eventService.saveEvent(eventoRequest);
     }
     
 }
