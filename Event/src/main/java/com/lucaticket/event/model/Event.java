@@ -3,6 +3,7 @@ package com.lucaticket.event.model;
 import java.time.LocalDateTime;
 
 import com.lucaticket.event.model.dto.EventResponse;
+import com.lucaticket.event.model.enums.Genre;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

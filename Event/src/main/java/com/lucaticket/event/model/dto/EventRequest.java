@@ -2,9 +2,8 @@ package com.lucaticket.event.model.dto;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.validator.constraints.Length;
-
 import com.lucaticket.event.model.Event;
+import com.lucaticket.event.model.enums.Genre;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +12,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Data
 @AllArgsConstructor
