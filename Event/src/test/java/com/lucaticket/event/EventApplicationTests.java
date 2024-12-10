@@ -77,7 +77,6 @@ class EventApplicationTests {
 		}
 	}
 	
-<<<<<<< HEAD
 	@Test
 	void saveEvent_should_return_saved_event() {
 //	<-- Atributos -->
@@ -97,7 +96,6 @@ class EventApplicationTests {
 		assertNotNull(result);
 		assertEquals("Galacticon", result.getBody().getName());
 	}
-=======
 	//@Alberto
 	@Test
 	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
@@ -115,6 +113,6 @@ class EventApplicationTests {
 	        );
 	}
 	
->>>>>>> lt-35-pruebaUnitariaSaveEvent
+
 
 }
