@@ -61,6 +61,7 @@ public class EventRequest {
 		event.setEventDate(this.eventDate);
 		event.setMinPrice(this.minPrice);
 		event.setMaxPrice(this.maxPrice);
+		event.setVenueName(this.venueName);
 		event.setLocation(this.location);
 		event.setGenre(this.genre);
 
