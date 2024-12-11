@@ -191,8 +191,8 @@ class EventApplicationTests {
 	}
 
 	/**
-	 * @author Raul testea que devuelva un 404 cuando intente buscar un evento que
-	 *         no existe
+	 * @author Raul 
+	 * testea que devuelva un 404 cuando intente buscar un evento que no existe
 	 */
 	@Test
 	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
@@ -201,6 +201,10 @@ class EventApplicationTests {
 		assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 	}
 	
+	/**
+	 * @author Raul
+	 * testea que se devuelva la cantidad adecuada de elementos 
+	 */
 	@Test
 	void when_returning_list_should_be_same_size() {
 		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
