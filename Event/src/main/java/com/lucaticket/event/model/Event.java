@@ -16,51 +16,90 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Alberto
-
+/**
+ * Entidad que representa un evento en el sistema LucaTicket.
+ * Contiene información básica y detallada del evento, como su nombre, descripción,
+ * ubicación, precios y género.
+ * 
+ * @version 1.0
+ * @author Alberto
+ * @since 2024-12-11
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "events")
 public class Event {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
-	private String name;
-	private String description;
-	private LocalDateTime eventDate;
-	private double minPrice;
-	private double maxPrice;
-	private String location;
-	private String venueName;
-	@Enumerated(EnumType.STRING)
-	private Genre genre;
+    /** Identificador único del evento. */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-	// @AngelZhang159
-		public DetailedEventResponse toDetailedDto() {
-			DetailedEventResponse eventResponse = new DetailedEventResponse();
+    /** Nombre del evento. */
+    private String name;
 
-			eventResponse.setName(this.name);
-			eventResponse.setDescription(this.description);
-			eventResponse.setEventDate(this.eventDate);
-			eventResponse.setMinPrice(this.minPrice);
-			eventResponse.setMaxPrice(this.maxPrice);
-			eventResponse.setLocation(this.location);
-			eventResponse.setVenueName(this.venueName);
-			eventResponse.setGenre(this.genre);
+    /** Descripción detallada del evento. */
+    private String description;
 
-			return eventResponse;
-		}
-		
-		public EventResponse toDto() {
-			EventResponse eventResponse = new EventResponse();
-			
-			eventResponse.setName(this.name);
-			eventResponse.setMinPrice(this.minPrice);
-			eventResponse.setMaxPrice(this.maxPrice);
-			eventResponse.setLocation(this.location);
-			
-			return eventResponse;
-		}
+    /** Fecha y hora en la que se llevará a cabo el evento. */
+    private LocalDateTime eventDate;
+
+    /** Precio mínimo de entrada para el evento. */
+    private double minPrice;
+
+    /** Precio máximo de entrada para el evento. */
+    private double maxPrice;
+
+    /** Localización del evento, como ciudad o dirección específica. */
+    private String location;
+
+    /** Nombre del recinto donde se llevará a cabo el evento. */
+    private String venueName;
+
+    /** Género musical o tipo de evento, representado como un enumerado. */
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
+
+    /**
+     * Convierte la entidad {@code Event} en un objeto de transferencia de datos detallado.
+     * Este método se utiliza para enviar información completa del evento al cliente.
+     * 
+	 * @author Angel
+     * @return Un objeto {@code DetailedEventResponse} que contiene los datos detallados del evento.
+     * @since 2024-12-11
+     */
+    public DetailedEventResponse toDetailedDto() {
+        DetailedEventResponse eventResponse = new DetailedEventResponse();
+
+        eventResponse.setName(this.name);
+        eventResponse.setDescription(this.description);
+        eventResponse.setEventDate(this.eventDate);
+        eventResponse.setMinPrice(this.minPrice);
+        eventResponse.setMaxPrice(this.maxPrice);
+        eventResponse.setLocation(this.location);
+        eventResponse.setVenueName(this.venueName);
+        eventResponse.setGenre(this.genre);
+
+        return eventResponse;
+    }
+
+    /**
+     * Convierte la entidad {@code Event} en un objeto de transferencia de datos resumido.
+     * Este método se utiliza para enviar información básica del evento al cliente.
+     * 
+	 * @author Raul
+     * @return Un objeto {@code EventResponse} que contiene los datos básicos del evento.
+     * @since 2024-12-11
+     */
+    public EventResponse toDto() {
+        EventResponse eventResponse = new EventResponse();
+
+        eventResponse.setName(this.name);
+        eventResponse.setMinPrice(this.minPrice);
+        eventResponse.setMaxPrice(this.maxPrice);
+        eventResponse.setLocation(this.location);
+
+        return eventResponse;
+    }
 }
