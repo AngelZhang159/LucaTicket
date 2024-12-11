@@ -60,6 +60,11 @@ public class EventController {
 		return eventService.getDetailedInfoEvent(id);
 	}
 	
+	/**
+	 * @author Raul
+	 * @param el nombre del evento
+	 * @return una lista con los eventos que tengan ese nombre
+	 */
 	@GetMapping("/list/{name}")
 	public ResponseEntity<List<EventResponse>> listByName(@PathVariable String name) {
 		return eventService.findByName(name);
