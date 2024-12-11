@@ -37,10 +37,12 @@ public class User {
     private LocalDate signupDate;
 
     public UserResponse toDto() {
-        return new UserResponse(
-            this.name,
-            this.lastName, 
-            this.mail, 
-            this.signupDate);
+        UserResponse userResponse = new UserResponse();
+
+        userResponse.setName(this.name + " " + this.lastName);
+        userResponse.setMail(this.mail);
+        userResponse.setSignupDate(this.signupDate);
+
+        return userResponse;
     }
 }
