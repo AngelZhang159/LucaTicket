@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
+import com.lucaticket.event.model.dto.EventDTO;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 
@@ -47,5 +49,12 @@ public interface EventService {
      * @return Un DTO con la información detallada del evento.
      */
 	ResponseEntity<DetailedEventResponse> getDetailedInfoEventByName(String eventName);
+	
+	/**
+	 * @author Angel
+	 * @param eventRequest
+	 * @return El evento actualizado
+	 */
+	ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event);
 	
 }
