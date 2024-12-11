@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -181,9 +182,11 @@ class EventApplicationTests {
 	 */
 	@Test
 	void should_return_the_correct_object_and_code_200_when_get_detailed_event() {
-		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
-				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		eventRepository.save(evento);
+		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
+		
 		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(1L);
 
 		assertEquals("Metal Militia", respuesta.getBody().getName());
@@ -196,9 +199,10 @@ class EventApplicationTests {
 	 */
 	@Test
 	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
-		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(123123L);
-
-		assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
+		when(eventRepository.findByName(any(String.class))).thenThrow(InvalidDataException.class);
+		
+		assertThrows(InvalidDataException.class, () -> eventService.getDetailedInfoEvent(123123L),
+				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
 	
 	
@@ -236,6 +240,8 @@ class EventApplicationTests {
 		comprobador.add(evento);
 		comprobador.add(evento1);
 		comprobador.add(evento2);
+		
+		when(eventRepository.findByName(any(String.class))).thenReturn(comprobador);
 		
 		ResponseEntity<List<EventResponse>> respuesta = eventService.findByName("Metal Militia");
 		
