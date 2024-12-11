@@ -67,6 +67,7 @@ class EventApplicationTests {
 			String databaseUrl = metaData.getURL();
 			String databaseUser = metaData.getUserName();
 
+			
 			// Valida que el URL coincide con la configuración proporcionada
 			assertEquals(
 					"jdbc:mysql://junction.proxy.rlwy.net:25537/lucatickect?useSSL=false&serverTimezone=UTC",
