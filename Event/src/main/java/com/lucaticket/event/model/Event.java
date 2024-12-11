@@ -36,6 +36,7 @@ public class Event {
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 
+	// @AngelZhang159
 	public EventResponse toDto() {
 		EventResponse eventResponse = new EventResponse();
 

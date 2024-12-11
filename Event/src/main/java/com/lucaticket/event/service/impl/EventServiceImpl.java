@@ -19,11 +19,20 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	EventRepository eventRepository;
 
+	/**
+	 * @author Raul
+	 * @param eventoRequest
+	 * @return un DTO de respuesta de "evento" con datos de la creacion
+	 */
 	@Override
 	public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
 		return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
 	}
 
+	/**
+	 * @author Raul
+	 * @return una lista con todos los eventos
+	 */
 	@Override
 	public ResponseEntity<List<EventResponse>> getEvents() {
 		if(eventRepository.findAll().isEmpty()) { return new ResponseEntity<>(HttpStatus.NO_CONTENT); }
