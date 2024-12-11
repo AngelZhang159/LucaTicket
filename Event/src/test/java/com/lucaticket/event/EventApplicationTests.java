@@ -1,7 +1,9 @@
 package com.lucaticket.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
+import com.lucaticket.event.model.dto.EventDTO;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
@@ -184,9 +187,9 @@ class EventApplicationTests {
 	void should_return_the_correct_object_and_code_200_when_get_detailed_event() {
 		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
-		
+
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
-		
+
 		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(1L);
 
 		assertEquals("Metal Militia", respuesta.getBody().getName());
@@ -194,18 +197,17 @@ class EventApplicationTests {
 	}
 
 	/**
-	 * @author Raul 
-	 * testea que devuelva un 404 cuando intente buscar un evento que no existe
+	 * @author Raul testea que devuelva un 404 cuando intente buscar un evento que
+	 *         no existe
 	 */
 	@Test
 	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
 		when(eventRepository.findByName(any(String.class))).thenThrow(InvalidDataException.class);
-		
+
 		assertThrows(InvalidDataException.class, () -> eventService.getDetailedInfoEvent(123123L),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
-	
-	
+
 	/**
 	 * @author Angel
 	 * 
@@ -214,18 +216,17 @@ class EventApplicationTests {
 	void should_return_200_whenEventWithNameExists() {
 		Event evento1 = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
+
 		when(eventRepository.save(any(Event.class))).thenReturn(evento1);
-		
+
 		ResponseEntity<EventResponse> entity = eventService.saveEvent(new EventRequest());
-		
+
 		assertEquals(HttpStatus.OK, entity.getStatusCode());
-		
+
 	}
-	
+
 	/**
-	 * @author Raul
-	 * testea que se devuelva la cantidad adecuada de elementos 
+	 * @author Raul testea que se devuelva la cantidad adecuada de elementos
 	 */
 	@Test
 	void when_returning_list_should_be_same_size() {
@@ -235,29 +236,138 @@ class EventApplicationTests {
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
 		Event evento2 = new Event(3, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
+
 		List<Event> comprobador = new ArrayList<>();
 		comprobador.add(evento);
 		comprobador.add(evento1);
 		comprobador.add(evento2);
-		
+
 		when(eventRepository.findByName(any(String.class))).thenReturn(comprobador);
-		
+
 		ResponseEntity<List<EventResponse>> respuesta = eventService.findByName("Metal Militia");
-		
+
 		assertEquals(3, respuesta.getBody().size());
 	}
-	
+
 	/**
-	 * @author Alberto de la Blanca testea que devuelve 404 cuando no encuentre un evento con el nombre dado
+	 * @author Alberto de la Blanca testea que devuelve 404 cuando no encuentre un
+	 *         evento con el nombre dado
 	 */
 	@Test
 	void should_return_404_when_event_not_found() {
 		String eventName = "EventoInexistente";
 		when(eventRepository.findByName(eventName)).thenReturn(List.of());
-		
-		InvalidDataException exception = assertThrows(InvalidDataException.class, () -> eventService.getDetailedInfoEventByName(eventName), "Deberia lanzarse InvalidException cuando no se encuentra el evento por nombre.");
-		
-		assertEquals("El evento con nombre 'EventoInexistente' no existe.", exception.getMessage(), "El mensaje de la excepción debería ser el esperado.");
+
+		InvalidDataException exception = assertThrows(InvalidDataException.class,
+				() -> eventService.getDetailedInfoEventByName(eventName),
+				"Deberia lanzarse InvalidException cuando no se encuentra el evento por nombre.");
+
+		assertEquals("El evento con nombre 'EventoInexistente' no existe.", exception.getMessage(),
+				"El mensaje de la excepción debería ser el esperado.");
 	}
+
+	/**
+	 * @author Raul
+	 * testea que el tamaño de la lista de los eventos es la misma antes y despues del update
+	 */
+	@Test
+	void event_list_size_should_remain_the_same_after_update() {
+		List<Event> eventosBase = new ArrayList<>();
+		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		Event evento1 = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		eventosBase.add(evento1);
+		
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
+				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
+				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		when(eventRepository.save(any(Event.class))).thenReturn(eventoUpdate);
+		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
+		when(eventRepository.findAll()).thenReturn(eventosBase);
+		
+		ResponseEntity<DetailedEventResponse> respuesta = eventService.updateEvent(eventoUpdateDto);
+		ResponseEntity<List<EventResponse>> listaRespuesta = eventService.getEvents();
+		
+		
+		assertEquals(1, listaRespuesta.getBody().size());
+	}
+
+	/**
+	 * @author Raul
+	 * testea que devuelve un 200 al actualizar correctamente
+	 */
+	@Test
+	void should_return_200_on_update() {
+		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
+				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
+				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		when(eventRepository.save(any(Event.class))).thenReturn(eventoUpdate);
+		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
+		
+		ResponseEntity<DetailedEventResponse> respuesta = eventService.updateEvent(eventoUpdateDto);
+		
+		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+	}
+	
+	/**
+	 * @author Raul
+	 * testea que se tira la excepcion cuando los datos introducidos son invalidos
+	 */
+	@Test
+	void should_throw_invalid_data_exception_on_wrong_data_when_update() {
+		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
+				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
+		when(eventRepository.save(any(Event.class))).thenThrow(InvalidDataException.class);
+
+		assertThrows(InvalidDataException.class, () -> eventService.updateEvent(eventoUpdateDto),
+				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
+	}
+	
+	/**
+	 * @author Alberto de la Blanca testea que realmente se ha borrado el evento de la base de datos
+	 */
+	
+	@Test
+	void test_delete_event() {
+		//evento de prueba
+		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(event);
+		
+		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(null);
+		
+		Optional<Event> deletedEvent = eventRepository.findById(respuesta.getBody().getId());
+		assertNull(deletedEvent);
+	}
+	/**
+	 * @author Alberto de la Blanca testea que al borrar un evento, devolver un 200 si se ha borrado con exito
+	 */
+	@Test
+	void testDeleteEventReturns200() {
+		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(event);
+		
+		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		
+		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+	}
+
 }
