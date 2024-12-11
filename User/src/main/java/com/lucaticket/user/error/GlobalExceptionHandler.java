@@ -2,6 +2,7 @@ package com.lucaticket.user.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,6 +71,29 @@ public class GlobalExceptionHandler {
         body.put("details", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserServiceException.class)
+    public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
+        return buildResponseEntity(
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "USER_SERVICE_ERROR",
+                request);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex,
+            WebRequest request) {
+        String detailedMessage = ex.getMostSpecificCause() != null
+                ? ex.getMostSpecificCause().getMessage()
+                : ex.getMessage();
+
+        return buildResponseEntity(
+                "Error al leer el cuerpo de la solicitud JSON: " + detailedMessage,
+                HttpStatus.BAD_REQUEST,
+                "JSON_PARSE_ERROR",
+                request);
     }
 
     private ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status, String errorCode,
