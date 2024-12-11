@@ -142,24 +142,23 @@ class EventApplicationTests {
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
-	
+
 	/**
-	 * @author Raul
-	 * tests that the returned list, whem no events exit, is not null
+	 * @author Raul tests that the returned list, whem no events exit, is not null
 	 */
 	@Test
 	void should_not_return_null_when_list_is_empty() {
 //	<-- Attributes -->
 		List<Event> respuesta = new ArrayList<>();
-		
+
 //	<-- Mocking ->>
 		when(eventRepository.findAll()).thenReturn(respuesta);
-		
+
 		ResponseEntity<List<EventResponse>> respuestaEntity = eventService.getEvents();
-		
+
 		assertNotNull(respuestaEntity);
 	}
-	
+
 	@Test
 	void should_return_correct_size_list_when_events_exist() {
 //		<-- Attributes -->
@@ -167,26 +166,38 @@ class EventApplicationTests {
 		respuesta.add(new Event());
 		respuesta.add(new Event());
 		respuesta.add(new Event());
-		
+
 //		<-- Mocking ->>
 		when(eventRepository.findAll()).thenReturn(respuesta);
-		
+
 		ResponseEntity<List<EventResponse>> respuestaEntity = eventService.getEvents();
-		
+
 		assertEquals(3, respuestaEntity.getBody().size());
 	}
-	
+
 	/**
-	 * @author Raul
-	 * testea que el objeto listado se devuelva correctamente y devuelva 200
+	 * @author Raul testea que el objeto listado se devuelva correctamente y
+	 *         devuelva 200
 	 */
 	@Test
 	void should_return_the_correct_object_and_code_200_when_get_detailed_event() {
-		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
 		eventRepository.save(evento);
 		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(1L);
-		
+
 		assertEquals("Metal Militia", respuesta.getBody().getName());
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+	}
+
+	/**
+	 * @author Raul testea que devuelva un 404 cuando intente buscar un evento que
+	 *         no existe
+	 */
+	@Test
+	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
+		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(123123L);
+
+		assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 	}
 }
