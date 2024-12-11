@@ -52,9 +52,9 @@ class EventApplicationTests {
 	@Test
 	void should_throw_invalid_data_exception_when_wrong_request() {
 		
-		when(userService.saveUser(any(UserRequest.class))).thenThrow(InvalidDataException.class);
+		when(userService.saveUser(any(UserRequest.class))).thenThrow(InvalidUserDataException.class);
 		
-		assertThrows(InvalidDataException.class, () -> userService.saveUser(new UserRequest()),
+		assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
 }
