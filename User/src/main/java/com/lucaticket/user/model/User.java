@@ -21,15 +21,13 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private String mail;
 
     private String name;
 
     @Column(name = "last_name")
     private String lastName;
-
-    private String mail;
 
     private String password;
 
