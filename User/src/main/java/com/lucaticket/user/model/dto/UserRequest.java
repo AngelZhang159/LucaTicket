@@ -33,7 +33,7 @@ public class UserRequest {
     @NotBlank(message = "La contraseña no puede estar vacía.")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
     @Pattern(
-        regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
+        regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&_#^])[A-Za-z\\d@$!%*?&_#^]+$",
         message = "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
     )
     private String password;
