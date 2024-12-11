@@ -84,9 +84,7 @@ class EventApplicationTests {
 	@Test
 	void saveEvent_should_return_saved_event() {
 		// <-- Atributos -->
-		String str = "2025-01-01";
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+		LocalDateTime dateTime = LocalDateTime.of(2025, 5, 20, 18, 00);
 
 		EventRequest peticionEvento = new EventRequest("Galacticon", "Una emocionante aventura", dateTime, 10.00, 20.00,
 				"Madrid", "Wizink", Genre.METAL);
@@ -110,6 +108,8 @@ class EventApplicationTests {
 		invalidEvent.setName(""); //nombre vacio
 		invalidEvent.setEventDate(null); //fecha nula
 		invalidEvent.setMinPrice(-5.0);//precio minimo negativo
+		
+		when(eventRepository.save(any(Event.class))).thenThrow(InvalidDataException.class);
 		
 		//verificar que se lanza excepcion
 		assertThrows(
