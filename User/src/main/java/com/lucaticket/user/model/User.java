@@ -39,7 +39,7 @@ public class User {
     public UserResponse toDto() {
         UserResponse userResponse = new UserResponse();
 
-        userResponse.setName(this.name + " " + this.lastName);
+        userResponse.setFullName(this.name + " " + this.lastName);
         userResponse.setMail(this.mail);
         userResponse.setSignupDate(this.signupDate);
 
