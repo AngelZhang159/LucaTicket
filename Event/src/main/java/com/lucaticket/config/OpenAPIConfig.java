@@ -10,19 +10,15 @@ import io.swagger.v3.oas.annotations.servers.Server;
 				contact = @Contact(
 						name = "Grupo 2" 
 						),
-				description = "Documentación del projecto 2 [Luca Steam Spring]",
-				title = "Luca Steam Spring",
+				description = "Documentación del projecto 3 [LucaTicket]",
+				title = "LucaTicket Spring",
 				version = "1.0"
 				),
 		servers = {
 				@Server(
 						description = "Local",
-						url = "http://localhost:8080"
+						url = "http://localhost:8081"
 				),
-				@Server(
-						description = "Producción",
-						url = "http://3.90.213.131:8080"
-				)
 				
 		}
 )
