@@ -247,4 +247,17 @@ class EventApplicationTests {
 		
 		assertEquals(3, respuesta.getBody().size());
 	}
+	
+	/**
+	 * @author Alberto de la Blanca testea que devuelve 404 cuando no encuentre un evento con el nombre dado
+	 */
+	@Test
+	void should_return_404_when_event_not_found() {
+		String eventName = "EventoInexistente";
+		when(eventRepository.findByName(eventName)).thenReturn(List.of());
+		
+		InvalidDataException exception = assertThrows(InvalidDataException.class, () -> eventService.getDetailedInfoEventByName(eventName), "Deberia lanzarse InvalidException cuando no se encuentra el evento por nombre.");
+		
+		assertEquals("El evento con nombre 'EventoInexistente' no existe.", exception.getMessage(), "El mensaje de la excepción debería ser el esperado.");
+	}
 }
