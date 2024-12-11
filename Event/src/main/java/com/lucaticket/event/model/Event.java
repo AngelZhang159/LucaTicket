@@ -2,6 +2,7 @@ package com.lucaticket.event.model;
 
 import java.time.LocalDateTime;
 
+import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
 
@@ -37,8 +38,8 @@ public class Event {
 	private Genre genre;
 
 	// @AngelZhang159
-	public EventResponse toDto() {
-		EventResponse eventResponse = new EventResponse();
+	public DetailedEventResponse toDetailedDto() {
+		DetailedEventResponse eventResponse = new DetailedEventResponse();
 
 		eventResponse.setName(this.name);
 		eventResponse.setDescription(this.description);
@@ -49,6 +50,17 @@ public class Event {
 		eventResponse.setVenueName(this.venueName);
 		eventResponse.setGenre(this.genre);
 
+		return eventResponse;
+	}
+	
+	public EventResponse toDto() {
+		EventResponse eventResponse = new EventResponse();
+		
+		eventResponse.setName(this.name);
+		eventResponse.setMinPrice(this.minPrice);
+		eventResponse.setMaxPrice(this.maxPrice);
+		eventResponse.setLocation(this.location);
+		
 		return eventResponse;
 	}
 }
