@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "events")
 public class Event {
 
 	@Id
@@ -31,6 +33,7 @@ public class Event {
 	private double maxPrice;
 	private String location;
 	private String venueName;
+	@Enumerated(EnumType.STRING)
 	private Genre genre;
 
 	public EventResponse toDto() {

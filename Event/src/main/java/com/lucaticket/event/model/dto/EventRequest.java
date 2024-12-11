@@ -7,6 +7,7 @@ import com.lucaticket.event.model.enums.Genre;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -20,37 +21,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventRequest {
 
-	@NotNull
-	@NotEmpty
+	@NotBlank(message = "El nombre no puede estar vacío")
 	@Size(max = 20)
 	private String name;
 
-	@NotNull
-	@NotEmpty
+	@NotBlank(message = "La descripción no puede estar vacía")
 	@Size(max = 200)
 	private String description;
 
 	private LocalDateTime eventDate;
 
-	@NotNull
-	@Positive
+	@NotBlank(message = "El precio mínimo no puede estar vacío")
+	@Positive(message = "El precio mínimo no puede ser negativo")
 	private double minPrice;
 
-	@NotNull
-	@Positive
+	@NotBlank(message = "El precio máximo no puede estar vacío")
+	@Positive(message = "El precio máximo no puede ser negativo")
 	private double maxPrice;
 
-	@NotNull
-	@NotEmpty
-	@Size(max = 20)
+	@NotBlank(message = "La ubicación no puede estar vacía")
+	@Size(max = 20, message = "La ubicación no puede tener más de 20 caracteres")
 	private String location;
 
-	@NotNull
-	@NotEmpty
-	@Size(max = 20)
+	@NotBlank(message = "El nombre del lugar no puede estar vacío")
+	@Size(max = 20, message = "El nombre del lugar no puede tener más de 20 caracteres")
 	private String venueName;
 
-	@Enumerated(EnumType.STRING)
+	@NotBlank(message = "El género no puede estar vacío")
 	private Genre genre;
 
 	public Event toEntity() {
