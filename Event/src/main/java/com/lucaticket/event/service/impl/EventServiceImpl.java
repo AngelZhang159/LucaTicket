@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
+import com.lucaticket.event.model.dto.EventDTO;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.repository.EventRepository;
@@ -29,6 +29,7 @@ public class EventServiceImpl implements EventService {
 	 */
 	@Override
 	public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
+		comprobarPrecio(eventoRequest.getMinPrice(), eventoRequest.getMaxPrice());
 		return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
 	}
 
@@ -69,6 +70,49 @@ public class EventServiceImpl implements EventService {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(eventResponses);
+	}
+
+	@Override
+	public ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event) {
+
+		Event eventOld = eventRepository.findById(event.getId())
+				.orElseThrow(() -> new InvalidDataException("El evento con el id: " + event.getId() + " no existe"));
+
+		Event eventNew = new Event(eventOld.getId(), eventOld.getName(), eventOld.getDescription(),
+				eventOld.getEventDate(), eventOld.getMinPrice(), eventOld.getMaxPrice(), eventOld.getLocation(),
+				eventOld.getVenueName(), eventOld.getGenre());
+
+		if (!(event.getName() == null || event.getName().isBlank())) {
+			eventNew.setName(event.getName());
+		}
+		if (!(event.getDescription() == null || event.getDescription().isBlank())) {
+			eventNew.setDescription(event.getDescription());
+		}
+		if (!(event.getEventDate() == null)) {
+			eventNew.setEventDate(event.getEventDate());
+		}
+		if (!(event.getMinPrice() <= 0)) {
+			eventNew.setMinPrice(event.getMinPrice());
+		}
+		if (!(event.getMaxPrice() <= 0)) {
+			eventNew.setMaxPrice(event.getMaxPrice());
+		}
+		if (!(event.getLocation() == null || event.getLocation().isBlank())) {
+			eventNew.setLocation(event.getLocation());
+		}
+		if (!(event.getGenre() == null)) {
+			eventNew.setGenre(event.getGenre());
+		}
+		
+		comprobarPrecio(eventNew.getMinPrice(), eventNew.getMaxPrice());
+
+		return ResponseEntity.ok(eventRepository.save(eventNew).toDetailedDto());
+	}
+
+	private void comprobarPrecio(double min, double max) {
+		if (min > max) {
+			throw new InvalidDataException("El precio mínimo no puede superar al máximo");
+		}
 	}
 
 }
