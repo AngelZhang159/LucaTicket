@@ -34,6 +34,8 @@ import com.lucaticket.user.repository.UserRepository;
 import com.lucaticket.user.service.impl.UserServiceImpl;
 import com.sun.jdi.request.EventRequest;
 
+import jakarta.transaction.Transactional;
+
 @SpringBootTest
 class EventApplicationTests {
 	// <-- Atributos -->
@@ -57,4 +59,27 @@ class EventApplicationTests {
 		assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
+	/**
+	 * @author Alberto
+	 * validates that an user with valid data persists in database
+	 */
+	 @Test
+	 @Transactional
+	  void registerUser_shouldPersistUserInDatabaseWhenDataIsValid() {
+	        // Crear un objeto User con datos válidos
+	        User validUser = new User();
+	        validUser.setUserId("U12345");
+	        validUser.setName("Juan");
+	        validUser.setLastName("Pérez");
+	        validUser.setMail("juan.perez@example.com");
+	        validUser.setPassword("securePassword123");
+	        validUser.setSignupDate(LocalDate.now());
+
+	        // Registrar el usuario utilizando el servicio
+	        User savedUser = userService.registerUser(validUser);
+
+	        // Verificar que el usuario se haya persistido en la base de datos
+	        assertNotNull(savedUser.getUserId(), "El ID del usuario debería generarse al persistirlo.");
+	        assertNotNull(userRepository.findById(savedUser.getUserId()), "El usuario debería existir en la base de datos.");
+	    }
 }
