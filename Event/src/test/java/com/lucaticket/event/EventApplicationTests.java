@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
+import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
@@ -175,4 +176,17 @@ class EventApplicationTests {
 		assertEquals(3, respuestaEntity.getBody().size());
 	}
 	
+	/**
+	 * @author Raul
+	 * testea que el objeto listado se devuelva correctamente y devuelva 200
+	 */
+	@Test
+	void should_return_the_correct_object_and_code_200_when_get_detailed_event() {
+		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		eventRepository.save(evento);
+		ResponseEntity<DetailedEventResponse> respuesta = eventService.getDetailedInfoEvent(1L);
+		
+		assertEquals("Metal Militia", respuesta.getBody().getName());
+		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+	}
 }
