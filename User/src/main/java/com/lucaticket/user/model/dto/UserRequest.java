@@ -1,5 +1,7 @@
 package com.lucaticket.user.model.dto;
 
+import java.time.LocalDate;
+
 import com.lucaticket.user.model.User;
 
 import jakarta.validation.constraints.Email;
@@ -44,6 +46,7 @@ public class UserRequest {
         user.setLastName(this.lastName);
         user.setMail(this.mail);
         user.setPassword(this.password);
+        user.setSignupDate(LocalDate.now());
 
         return user;
 	}

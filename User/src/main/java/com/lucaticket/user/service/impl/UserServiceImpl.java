@@ -3,6 +3,7 @@ package com.lucaticket.user.service.impl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.user.error.UserAlreadyExistsException;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.repository.UserRepository;
@@ -18,7 +19,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest) {
+		if(userRepository.findByMail(userRequest.getMail()).isPresent()) {
+			throw new UserAlreadyExistsException("El email ya está registrado " + userRequest.getMail());
+		}
 		return ResponseEntity.ok(userRepository.save(userRequest.toEntity()).toDto());
 	}
+
 
 }
