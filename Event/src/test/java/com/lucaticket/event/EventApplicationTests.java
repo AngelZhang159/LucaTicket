@@ -1,30 +1,25 @@
 package com.lucaticket.event;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-
-import javax.sql.DataSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-<<<<<<< HEAD
-=======
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
->>>>>>> 1d19f69a6a229064e6e5a067f351532a7e87e95d
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
@@ -110,7 +105,6 @@ class EventApplicationTests {
 	// @Alberto
 	@Test
 	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
-<<<<<<< HEAD
 		//Crear DTO con datos inválidos
 		EventRequest invalidEvent = new EventRequest();
 		invalidEvent.setName(""); //nombre vacio
@@ -124,20 +118,4 @@ class EventApplicationTests {
 	            "Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos."
 	        );
 	}
-	
-=======
-		// Crear DTO con datos inválidos
-		EventoDTO invalidEvent = new EventDTO();
-		invalidEvent.setName(""); // nombre vacio
-		invalidEvent.setEventDate(null); // fecha nula
-		invalidEvent.setMinPrice(-5.0);// precio minimo negativo
->>>>>>> 1d19f69a6a229064e6e5a067f351532a7e87e95d
-
-		// verificar que se lanza excepcion
-		assertThrows(
-				InvalidDataException.class,
-				() -> eventService.saveEvent(invalidEvent),
-				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
-	}
-
 }
