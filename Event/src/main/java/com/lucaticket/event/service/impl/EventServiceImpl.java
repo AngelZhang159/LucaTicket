@@ -70,5 +70,22 @@ public class EventServiceImpl implements EventService {
 		}
 		return ResponseEntity.ok(eventResponses);
 	}
+	
+	/**
+	 * @author Alberto de la Blanca
+	 * @return una DTO con la información detallada del evento buscando por nombre
+	 */
+	
+	@Override
+	public ResponseEntity<DetailedEventResponse> getDetailedInfoEventByName(String eventName) {
+	    List<Event> events = eventRepository.findByName(eventName);
+	    if (events.isEmpty()) {
+	        throw new InvalidDataException("El evento con nombre '" + eventName + "' no existe.");
+	    }
+
+	    Event event = events.get(0); // Asumiendo que el nombre es único o tomas el primero
+	    DetailedEventResponse response = event.toDetailedDto();
+	    return ResponseEntity.ok(response);
+	}
 
 }

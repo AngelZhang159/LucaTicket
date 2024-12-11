@@ -39,4 +39,13 @@ public interface EventService {
 	 */
 	ResponseEntity<List<EventResponse>> findByName(String name);
 	
+	/**
+	 * @author Alberto de la Blanca
+     * Obtiene información detallada de un evento buscada por nombre.
+     * 
+     * @param eventName
+     * @return Un DTO con la información detallada del evento.
+     */
+	ResponseEntity<DetailedEventResponse> getDetailedInfoEventByName(String eventName);
+	
 }
