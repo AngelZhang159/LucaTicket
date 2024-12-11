@@ -35,7 +35,7 @@ import com.lucaticket.user.service.impl.UserServiceImpl;
 import com.sun.jdi.request.EventRequest;
 
 @SpringBootTest
-class EventApplicationTests {
+class UserApplicationTests {
 	// <-- Atributos -->
 
 	@InjectMocks
@@ -57,4 +57,19 @@ class EventApplicationTests {
 		assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
+	
+	@Test
+	void should_increase_the_number_of_users_by_one() {
+		User user = new User();
+		List<User> usuarios = new ArrayList<>();
+		usuarios.add(new User());
+		
+		when(userRepository.save(any(User.class))).thenReturn(user);
+		when(userRepository.findAll()).thenReturn(usuarios);
+		
+		userRepository.save(user);
+		List<User> respuesta = userRepository.findAll();
+		
+		assertEquals(1, respuesta.size());
+		}
 }
