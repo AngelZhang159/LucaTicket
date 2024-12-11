@@ -191,8 +191,8 @@ class EventApplicationTests {
 	}
 
 	/**
-	 * @author Raul testea que devuelva un 404 cuando intente buscar un evento que
-	 *         no existe
+	 * @author Raul 
+	 * testea que devuelva un 404 cuando intente buscar un evento que no existe
 	 */
 	@Test
 	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
@@ -219,6 +219,26 @@ class EventApplicationTests {
 		
 	}
 	
-	
-	
+	/**
+	 * @author Raul
+	 * testea que se devuelva la cantidad adecuada de elementos 
+	 */
+	@Test
+	void when_returning_list_should_be_same_size() {
+		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		Event evento1 = new Event(2, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		Event evento2 = new Event(3, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		List<Event> comprobador = new ArrayList<>();
+		comprobador.add(evento);
+		comprobador.add(evento1);
+		comprobador.add(evento2);
+		
+		ResponseEntity<List<EventResponse>> respuesta = eventService.findByName("Metal Militia");
+		
+		assertEquals(3, respuesta.getBody().size());
+	}
 }
