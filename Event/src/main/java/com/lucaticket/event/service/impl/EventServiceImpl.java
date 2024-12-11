@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.event.error.InvalidDataException;
+import com.lucaticket.event.model.Event;
+import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.repository.EventRepository;
@@ -40,6 +43,17 @@ public class EventServiceImpl implements EventService {
 				  .stream()
 				  .map(a -> a.toDto())
 				  .toList());
+	}
+	
+	/**
+	 * @author Alberto de la Blanca
+	 * @return una DTO con la información detallada del evento.
+	 */
+	@Override
+	public ResponseEntity getDetailedInfoEvent(Long eventId){
+		Event event = eventRepository.findById(eventId).orElseThrow(()-> new InvalidDataException("El evento con ID: " + eventId + " no existe."));
+		
+		return ResponseEntity.ok(event.toDetailedDto());
 	}
 
 }

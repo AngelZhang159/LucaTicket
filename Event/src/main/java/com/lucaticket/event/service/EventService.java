@@ -22,4 +22,13 @@ public interface EventService {
 	 */
 	ResponseEntity<List<EventResponse>> getEvents();
 	
+	/**
+	 * @author Alberto de la Blanca
+     * Obtiene información detallada de un evento.
+     * 
+     * @param eventId El identificador del evento.
+     * @return Un DTO con la información detallada del evento.
+     */
+	ResponseEntity<DetailedEventResponse> getDetailedInfoEvent (Long eventId);
+	
 }
