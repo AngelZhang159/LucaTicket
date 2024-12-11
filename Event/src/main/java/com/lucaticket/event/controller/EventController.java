@@ -10,8 +10,11 @@ import com.lucaticket.event.service.EventService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,6 +37,16 @@ public class EventController {
     public ResponseEntity<EventResponse> saveEvent(@RequestBody @Valid EventRequest eventoRequest) {
         log.info("EventController.saveEvent");
         return eventService.saveEvent(eventoRequest);
+    }
+    
+    /**
+     * @author Raul
+     * @return una lista con todos los eventos
+     */
+    @GetMapping("/listAll")
+    public ResponseEntity<List<EventResponse>> getEvents() {
+    	log.info("EventController.getEvents");
+    	return eventService.getEvents();
     }
     
 }
