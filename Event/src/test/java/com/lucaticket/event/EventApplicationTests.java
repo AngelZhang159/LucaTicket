@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
@@ -100,7 +102,7 @@ class EventApplicationTests {
 	@Test
 	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
 		//Crear DTO con datos inválidos
-		EventoDTO invalidEvent = new EventDTO();
+		EventRequest invalidEvent = new EventRequest();
 		invalidEvent.setName(""); //nombre vacio
 		invalidEvent.setEventDate(null); //fecha nula
 		invalidEvent.setMinPrice(-5.0);//precio minimo negativo

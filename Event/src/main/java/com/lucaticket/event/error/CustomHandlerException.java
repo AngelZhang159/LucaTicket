@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,9 +16,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
-
 @RestControllerAdvice
-public class CustomHandlerException extends ResponseEntityExceptionHandler{
+public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -49,5 +50,21 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler{
 
 	}
 
-	
+	@Override
+	@Nullable
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+		List<String> messages = new ArrayList<>();
+		CustomErrorJson customError = new CustomErrorJson();
+
+		messages.add(ex.getLocalizedMessage());
+
+		customError.setTimestamp(new Date());
+		customError.setError(status.toString());
+		customError.setMessage(messages);
+
+		return new ResponseEntity<>(customError, headers, status);
+	}
+
 }
