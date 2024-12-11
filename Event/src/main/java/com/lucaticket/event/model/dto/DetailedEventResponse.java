@@ -8,25 +8,43 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object (DTO) que representa una respuesta detallada de un evento.
+ * Este objeto se utiliza para enviar información completa de un evento al cliente.
+ * 
+ * Incluye detalles como el nombre, descripción, fecha, precios, ubicación, y género.
+ * 
+ * @author Raul
+ * @version 1.0
+ * @since 2024-12-11
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailedEventResponse {
 
-	private String name;
+    /** Nombre del evento. */
+    private String name;
 
-	private String description;
+    /** Descripción detallada del evento. */
+    private String description;
 
-	private LocalDateTime eventDate;
+    /** Fecha y hora en la que se llevará a cabo el evento. */
+    private LocalDateTime eventDate;
 
-	private double minPrice;
+    /** Precio mínimo de entrada para el evento. */
+    private double minPrice;
 
-	private double maxPrice;
+    /** Precio máximo de entrada para el evento. */
+    private double maxPrice;
 
-	private String location;
+    /** Ubicación del evento, como ciudad o dirección específica. */
+    private String location;
 
-	private String venueName;
+    /** Nombre del recinto donde se llevará a cabo el evento. */
+    private String venueName;
 
-	private Genre genre;
+    /** Género musical o tipo de evento, representado como un enumerado. */
+    private Genre genre;
 
 }
