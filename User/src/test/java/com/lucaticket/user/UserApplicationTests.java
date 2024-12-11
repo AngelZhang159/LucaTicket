@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-// import com.lucaticket.user.error.InvalidDataException;
+import com.lucaticket.user.error.InvalidDataException;
 import com.lucaticket.user.model.User;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
@@ -49,12 +49,12 @@ class EventApplicationTests {
 		MockitoAnnotations.openMocks(this);
 	}
 
-	// @Test
-	// void should_throw_invalid_data_exception_when_wrong_request() {
+	@Test
+	void should_throw_invalid_data_exception_when_wrong_request() {
 		
-	// 	when(userService.saveUser(any(UserRequest.class))).thenThrow(InvalidUserDataException.class);
+		when(userService.saveUser(any(UserRequest.class))).thenThrow(InvalidUserDataException.class);
 		
-	// 	assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
-	// 			"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
-	// }
+		assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
+				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
+	}
 }
