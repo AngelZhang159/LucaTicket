@@ -32,4 +32,11 @@ public interface EventService {
      */
 	ResponseEntity<DetailedEventResponse> getDetailedInfoEvent (Long eventId);
 	
+	/**
+	 * @author Angel
+	 * @param name
+	 * @return Lista con todos los eventos que coincidan con el nombre
+	 */
+	ResponseEntity<List<EventResponse>> findByName(String name);
+	
 }
