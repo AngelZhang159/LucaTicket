@@ -59,5 +59,10 @@ public class EventController {
 	public ResponseEntity<DetailedEventResponse> getDetail(@PathVariable long id) {
 		return eventService.getDetailedInfoEvent(id);
 	}
+	
+	@GetMapping("/list/{name}")
+	public ResponseEntity<List<EventResponse>> listByName(@PathVariable String name) {
+		return eventService.findByName(name);
+	}
 
 }
