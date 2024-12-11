@@ -1,24 +1,35 @@
 package com.lucaticket.event.error;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestControllerAdvice
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
+	@ExceptionHandler(InvalidDataException.class)
+	public void springHandleNotFound(HttpServletResponse response) throws IOException {
+		logger.info("------ DATOS INVALIDOS");
+		response.sendError(HttpStatus.NOT_FOUND.value());
+	}
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -27,9 +38,7 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 		CustomErrorJson customError = new CustomErrorJson();
 
-		// Paso fecha pero la formatea a String con formato DD/MM/YY
 		customError.setTimestamp(new Date());
-		// customError.setTrace(ex.getLocalizedMessage());
 		customError.setStatus(status.value());
 		customError.setError(status.toString());
 

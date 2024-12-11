@@ -3,6 +3,7 @@ package com.lucaticket.event.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.service.EventService;
@@ -55,7 +56,7 @@ public class EventController {
 	 */
 
 	@GetMapping("/detail/{id}")
-	public ResponseEntity<DetailEventResponse> getDetail(@PathVariable long id) {
+	public ResponseEntity<DetailedEventResponse> getDetail(@PathVariable long id) {
 		return eventService.getDetailedInfoEvent(id);
 	}
 
