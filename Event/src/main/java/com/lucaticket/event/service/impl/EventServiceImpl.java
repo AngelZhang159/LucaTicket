@@ -88,6 +88,12 @@ public class EventServiceImpl implements EventService {
 	    DetailedEventResponse response = event.toDetailedDto();
 	    return ResponseEntity.ok(response);
 	}
+	
+	/**
+	 * @author Angel
+	 * @param eventRequest
+	 * @return El evento actualizado
+	 */
 
 	@Override
 	public ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event) {
@@ -125,11 +131,29 @@ public class EventServiceImpl implements EventService {
 
 		return ResponseEntity.ok(eventRepository.save(eventNew).toDetailedDto());
 	}
+	
+	/**
+	 * @author Angel
+	 * @param id
+	 * @return El evento borrado
+	 */
 
+	@Override
+	public ResponseEntity<EventResponse> deleteEvent(long id) {
+		Event event = eventRepository.findById(id).orElseThrow(() -> new InvalidDataException("No se ha encontrado el evento con el id: " + id));
+		eventRepository.delete(event);
+		return ResponseEntity.ok(event.toDto());
+	}
+
+	/**
+	 * @author Angel
+	 * @param min
+	 * @throws InvalidDataException
+	 * @param max
+	 */
 	private void comprobarPrecio(double min, double max) {
 		if (min > max) {
 			throw new InvalidDataException("El precio mínimo no puede superar al máximo");
 		}
 	}
-
 }

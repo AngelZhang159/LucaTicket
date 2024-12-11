@@ -56,6 +56,7 @@ public class Event {
 		public EventResponse toDto() {
 			EventResponse eventResponse = new EventResponse();
 			
+			eventResponse.setId(this.id);
 			eventResponse.setName(this.name);
 			eventResponse.setMinPrice(this.minPrice);
 			eventResponse.setMaxPrice(this.maxPrice);
