@@ -1,5 +1,6 @@
 package com.lucaticket.user.service.impl;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest) {
-		return ResponseEntity.ok(userRepository.save(userRequest.toEntity()).toDto());
+		return new ResponseEntity<UserResponse>(userRepository.save(userRequest.toEntity()).toDto(),HttpStatus.CREATED);
 	}
 
 }
