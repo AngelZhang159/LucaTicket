@@ -5,10 +5,8 @@ import java.time.LocalDateTime;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.enums.Genre;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -31,11 +29,11 @@ public class EventRequest {
 
 	private LocalDateTime eventDate;
 
-	@NotBlank(message = "El precio mínimo no puede estar vacío")
+	@NotNull(message = "El género no puede estar vacío")
 	@Positive(message = "El precio mínimo no puede ser negativo")
 	private double minPrice;
 
-	@NotBlank(message = "El precio máximo no puede estar vacío")
+	@NotNull(message = "El género no puede estar vacío")
 	@Positive(message = "El precio máximo no puede ser negativo")
 	private double maxPrice;
 
@@ -47,7 +45,7 @@ public class EventRequest {
 	@Size(max = 20, message = "El nombre del lugar no puede tener más de 20 caracteres")
 	private String venueName;
 
-	@NotBlank(message = "El género no puede estar vacío")
+	@NotNull(message = "El género no puede estar vacío")
 	private Genre genre;
 
 	public Event toEntity() {
