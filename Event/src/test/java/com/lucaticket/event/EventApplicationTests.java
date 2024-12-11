@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -119,4 +121,38 @@ class EventApplicationTests {
 	            "Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos."
 	        );
 	}
+	
+	/**
+	 * @author Raul
+	 * tests that the returned list, whem no events exit, is not null
+	 */
+	@Test
+	void should_not_return_null_when_list_is_empty() {
+//	<-- Attributes -->
+		List<Event> respuesta = new ArrayList<>();
+		
+//	<-- Mocking ->>
+		when(eventRepository.findAll()).thenReturn(respuesta);
+		
+		ResponseEntity<List<EventResponse>> respuestaEntity = eventService.getEvents();
+		
+		assertNotNull(respuestaEntity);
+	}
+	
+	@Test
+	void should_return_correct_size_list_when_events_exist() {
+//		<-- Attributes -->
+		List<Event> respuesta = new ArrayList<>();
+		respuesta.add(new Event());
+		respuesta.add(new Event());
+		respuesta.add(new Event());
+		
+//		<-- Mocking ->>
+		when(eventRepository.findAll()).thenReturn(respuesta);
+		
+		ResponseEntity<List<EventResponse>> respuestaEntity = eventService.getEvents();
+		
+		assertEquals(3, respuestaEntity.getBody().size());
+	}
+	
 }
