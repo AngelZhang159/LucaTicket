@@ -54,7 +54,7 @@ public class EventRequest {
      */
     @NotNull(message = "El precio mínimo no puede estar vacío")
     @Positive(message = "El precio mínimo no puede ser negativo")
-    private double minPrice;
+    private Double minPrice;
 
     /** 
      * Precio máximo del evento. 
@@ -62,7 +62,7 @@ public class EventRequest {
      */
     @NotNull(message = "El precio máximo no puede estar vacío")
     @Positive(message = "El precio máximo no puede ser negativo")
-    private double maxPrice;
+    private Double maxPrice;
 
     /** 
      * Ubicación del evento. 
