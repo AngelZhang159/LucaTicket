@@ -76,7 +76,7 @@ class UserApplicationTests {
 	void registerUser_shouldReturn201WhenDataIsValid() {
 
 		UserRequest userRequest = new UserRequest("Pepe", "Barrancos", "pepe@gmail.com", "ABCabc123&");
-		User user = new User(1L, userRequest.getName(), userRequest.getLastName(), userRequest.getMail(),
+		User user = new User(userRequest.getName(), userRequest.getLastName(), userRequest.getMail(),
 				userRequest.getPassword(), LocalDate.now());
 
 		when(userRepository.save(any(User.class))).thenReturn(user);
