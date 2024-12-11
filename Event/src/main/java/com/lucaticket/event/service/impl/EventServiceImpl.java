@@ -1,5 +1,7 @@
 package com.lucaticket.event.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,14 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
 		return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
+	}
+
+	@Override
+	public ResponseEntity<List<EventResponse>> getEvents() {
+		return ResponseEntity.ok(eventRepository.findAll()
+				  .stream()
+				  .map(a -> a.toDto())
+				  .toList());
 	}
 
 }

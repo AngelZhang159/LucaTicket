@@ -1,5 +1,7 @@
 package com.lucaticket.event.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.event.model.dto.EventRequest;
@@ -13,5 +15,11 @@ public interface EventService {
 	 * @return un DTO de respuesta de "evento" con datos de la creacion
 	 */
 	ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest);
+	
+	/**
+	 * @author Raul
+	 * @return una lista con todos los eventos
+	 */
+	ResponseEntity<List<EventResponse>> getEvents();
 	
 }
