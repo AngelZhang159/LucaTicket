@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.event.error.InvalidDataException;
@@ -65,17 +68,13 @@ class EventApplicationTests {
 			String databaseUrl = metaData.getURL();
 			String databaseUser = metaData.getUserName();
 
-			
 			// Valida que el URL coincide con la configuración proporcionada
-			assertEquals(
-					"jdbc:mysql://junction.proxy.rlwy.net:25537/lucatickect?useSSL=false&serverTimezone=UTC",
-					databaseUrl,
-					"El URL de la base de datos debería coincidir con la configuración proporcionada.");
+			assertEquals("jdbc:mysql://junction.proxy.rlwy.net:25537/lucatickect?useSSL=false&serverTimezone=UTC",
+					databaseUrl, "El URL de la base de datos debería coincidir con la configuración proporcionada.");
 
 			// Valida que el usuario contiene "root"
 			assertNotNull(databaseUser, "El usuario de la base de datos no debería ser nulo.");
-			assertTrue(
-					databaseUser.contains("root"),
+			assertTrue(databaseUser.contains("root"),
 					"El usuario de la base de datos debería contener 'root'. Usuario obtenido: " + databaseUser);
 		} catch (Exception e) {
 			throw new AssertionError("No se pudo conectar con la base de datos.", e);
@@ -104,19 +103,42 @@ class EventApplicationTests {
 	// @Alberto
 	@Test
 	void saveEvent_shouldThrowErrorWhenRequestIsInvalid() {
-		//Crear DTO con datos inválidos
+		// Crear DTO con datos inválidos
 		EventRequest invalidEvent = new EventRequest();
-		invalidEvent.setName(""); //nombre vacio
-		invalidEvent.setEventDate(null); //fecha nula
-		invalidEvent.setMinPrice(-5.0);//precio minimo negativo
-		
+		invalidEvent.setName(""); // nombre vacio
+		invalidEvent.setEventDate(null); // fecha nula
+		invalidEvent.setMinPrice(-5.0);// precio minimo negativo
+
 		when(eventRepository.save(any(Event.class))).thenThrow(InvalidDataException.class);
-		
-		//verificar que se lanza excepcion
-		assertThrows(
-	            InvalidDataException.class, 
-	            () -> eventService.saveEvent(invalidEvent),
-	            "Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos."
-	        );
+
+		// verificar que se lanza excepcion
+		assertThrows(InvalidDataException.class, () -> eventService.saveEvent(invalidEvent),
+				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
+	}
+
+	@Test
+	void listEvents_shouldReturn204WhenNoEventsExist() {
+		when(eventRepository.findAll()).thenReturn(new ArrayList<Event>());
+
+		ResponseEntity<List<EventResponse>> response = eventService.getEvents();
+
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	}
+
+	@Test
+	void listEvents_shouldReturn200WhenEventsExist() {
+		List<Event> events = new ArrayList<Event>();
+
+		events.add(new Event(1L, "pepe", "asdfasdasdf", LocalDateTime.of(2024, 10, 10, 10, 10), 15, 20, "jskf",
+				"lkwlds", Genre.BLUES));
+
+		events.add(new Event(2L, "qwert", "asdfsdf", LocalDateTime.of(2024, 10, 10, 10, 10), 15, 20, "gwere", "ergrg",
+				Genre.ELECTRONIC));
+
+		when(eventRepository.findAll()).thenReturn(events);
+
+		ResponseEntity<List<EventResponse>> response = eventService.getEvents();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 }
