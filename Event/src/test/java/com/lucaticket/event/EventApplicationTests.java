@@ -200,4 +200,25 @@ class EventApplicationTests {
 
 		assertEquals(HttpStatus.NOT_FOUND, respuesta.getStatusCode());
 	}
+	
+	
+	/**
+	 * @author Angel
+	 * 
+	 */
+	@Test
+	void should_return_200_whenEventWithNameExists() {
+		Event evento1 = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		
+		when(eventRepository.save(any(Event.class))).thenReturn(evento1);
+		
+		ResponseEntity<EventResponse> entity = eventService.saveEvent(new EventRequest());
+		
+		assertEquals(HttpStatus.OK, entity.getStatusCode());
+		
+	}
+	
+	
+	
 }
