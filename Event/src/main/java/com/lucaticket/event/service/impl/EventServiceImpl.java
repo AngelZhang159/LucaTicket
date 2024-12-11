@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.event.error.InvalidDataException;
+import com.lucaticket.event.model.Event;
+import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.repository.EventRepository;
@@ -35,11 +38,37 @@ public class EventServiceImpl implements EventService {
 	 */
 	@Override
 	public ResponseEntity<List<EventResponse>> getEvents() {
-		if(eventRepository.findAll().isEmpty()) { return new ResponseEntity<>(HttpStatus.NO_CONTENT); }
-		return ResponseEntity.ok(eventRepository.findAll()
-				  .stream()
-				  .map(a -> a.toDto())
-				  .toList());
+		if (eventRepository.findAll().isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return ResponseEntity.ok(eventRepository.findAll().stream().map(a -> a.toDto()).toList());
+	}
+
+	/**
+	 * @author Alberto de la Blanca
+	 * @return una DTO con la información detallada del evento.
+	 */
+	@Override
+	public ResponseEntity getDetailedInfoEvent(Long eventId) {
+		Event event = eventRepository.findById(eventId)
+				.orElseThrow(() -> new InvalidDataException("El evento con ID: " + eventId + " no existe."));
+
+		return ResponseEntity.ok(event.toDetailedDto());
+	}
+
+	/**
+	 * @author Angel
+	 * @param name
+	 * @return Lista con todos los eventos que coincidan con el nombre
+	 */
+
+	@Override
+	public ResponseEntity<List<EventResponse>> findByName(String name) {
+		List<EventResponse> eventResponses = eventRepository.findByName(name).stream().map(e -> e.toDto()).toList();
+		if (eventResponses.size() == 0) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(eventResponses);
 	}
 
 }
