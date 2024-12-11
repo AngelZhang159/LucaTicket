@@ -1,7 +1,9 @@
 package com.lucaticket.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -264,6 +266,10 @@ class EventApplicationTests {
 				"El mensaje de la excepción debería ser el esperado.");
 	}
 
+	/**
+	 * @author Raul
+	 * testea que el tamaño de la lista de los eventos es la misma antes y despues del update
+	 */
 	@Test
 	void event_list_size_should_remain_the_same_after_update() {
 		List<Event> eventosBase = new ArrayList<>();
@@ -290,6 +296,10 @@ class EventApplicationTests {
 		assertEquals(1, listaRespuesta.getBody().size());
 	}
 
+	/**
+	 * @author Raul
+	 * testea que devuelve un 200 al actualizar correctamente
+	 */
 	@Test
 	void should_return_200_on_update() {
 		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
@@ -308,6 +318,10 @@ class EventApplicationTests {
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}
 	
+	/**
+	 * @author Raul
+	 * testea que se tira la excepcion cuando los datos introducidos son invalidos
+	 */
 	@Test
 	void should_throw_invalid_data_exception_on_wrong_data_when_update() {
 		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
@@ -320,6 +334,40 @@ class EventApplicationTests {
 
 		assertThrows(InvalidDataException.class, () -> eventService.updateEvent(eventoUpdateDto),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
+	}
+	
+	/**
+	 * @author Alberto de la Blanca testea que realmente se ha borrado el evento de la base de datos
+	 */
+	
+	@Test
+	void test_delete_event() {
+		//evento de prueba
+		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(event);
+		
+		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(null);
+		
+		Optional<Event> deletedEvent = eventRepository.findById(respuesta.getBody().getId());
+		assertNull(deletedEvent);
+	}
+	/**
+	 * @author Alberto de la Blanca testea que al borrar un evento, devolver un 200 si se ha borrado con exito
+	 */
+	@Test
+	void testDeleteEventReturns200() {
+		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
+		
+		when(eventRepository.findById(any(Long.class))).thenReturn(event);
+		
+		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		
+		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}
 
 }
