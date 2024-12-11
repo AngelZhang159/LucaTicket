@@ -9,10 +9,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // @Olivord
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class User {
 
@@ -33,10 +37,12 @@ public class User {
     private LocalDate signupDate;
 
     public UserResponse toDto() {
-        return new UserResponse(
-            this.name, 
-            this.lastName, 
-            this.mail, 
-            this.signupDate);
+        UserResponse userResponse = new UserResponse();
+
+        userResponse.setName(this.name + " " + this.lastName);
+        userResponse.setMail(this.mail);
+        userResponse.setSignupDate(this.signupDate);
+
+        return userResponse;
     }
 }
