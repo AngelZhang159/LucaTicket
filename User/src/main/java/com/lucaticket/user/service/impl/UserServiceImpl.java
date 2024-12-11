@@ -17,13 +17,17 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 
+	/*
+	 * @AngelZhang159
+	 */
 	@Override
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest) {
+		// @Olivord
 		if(userRepository.findByMail(userRequest.getMail()).isPresent()) {
 			throw new UserAlreadyExistsException("El email ya está registrado " + userRequest.getMail());
 		}
+		
 		return ResponseEntity.ok(userRepository.save(userRequest.toEntity()).toDto());
 	}
-
 
 }
