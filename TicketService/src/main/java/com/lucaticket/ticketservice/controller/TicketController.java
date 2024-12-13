@@ -1,6 +1,7 @@
 package com.lucaticket.ticketservice.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,15 @@ public class TicketController {
 	@PostMapping("/ticket") 
 	ResponseEntity<TicketResponse> save(TicketRequest ticket) {
 		return ticketService.save(ticket);
+	}
+	
+	/**
+	 * @author Raul
+	 * @return una lista con todos los tickets registrados
+	 */
+	@GetMapping("/ticket")
+	ResponseEntity<List<TicketResponse>> listTickets() {
+		return ticketService.listTickets();
 	}
 	
 }
