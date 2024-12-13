@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ticket")
 public class TicketController {
 
 	private final TicketService ticketService;
@@ -25,16 +28,16 @@ public class TicketController {
 	 * @return una entidad de respuesta con un codigo http y el objeto ticket que se
 	 *         ha guardado
 	 */
-	@PostMapping("/ticket")
-	ResponseEntity<TicketResponse> save(TicketRequest ticket) {
-		return ticketService.save(ticket);
+	@PostMapping
+	ResponseEntity<TicketResponse> save(@RequestBody TicketRequest ticketRequest ) {
+		return ticketService.save(ticketRequest);
 	}
 
 	/**
 	 * @author Raul
 	 * @return una lista con todos los tickets registrados
 	 */
-	@GetMapping("/ticket")
+	@GetMapping
 	ResponseEntity<List<TicketResponse>> listTickets() {
 		return ticketService.listTickets();
 	}

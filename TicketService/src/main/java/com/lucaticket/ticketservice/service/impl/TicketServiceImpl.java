@@ -26,7 +26,7 @@ public class TicketServiceImpl implements TicketService {
 	 * @return ticketResponse
 	 */
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
-		return new ResponseEntity<TicketResponse>(ticketRepository.save(ticketRequest.toEntity()).toDTO(),
+		return new ResponseEntity<>(ticketRepository.save(ticketRequest.toEntity()).toDTO(),
 				HttpStatus.CREATED);
 	}
 
@@ -36,6 +36,6 @@ public class TicketServiceImpl implements TicketService {
 		if (tickets.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
-		return ResponseEntity.ok(tickets.stream().map(t -> t.toDTO()).toList());
+		return ResponseEntity.ok(tickets.stream().map(Ticket::toDTO).toList());
 	}
 }

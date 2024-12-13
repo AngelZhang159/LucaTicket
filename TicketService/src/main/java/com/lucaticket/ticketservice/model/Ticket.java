@@ -27,8 +27,8 @@ public class Ticket {
 	 * Identificador único del ticket. Generado automáticamente..
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long IdTicket;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	/**
 	 * Correo electrónico del usuario asociado al ticket.
@@ -50,6 +50,7 @@ public class Ticket {
 	public TicketResponse toDTO() {
 
 		TicketResponse response = new TicketResponse();
+
 		response.setEmail(this.email);
 		response.setIdEvent(this.idEvent);
 
