@@ -1,9 +1,12 @@
 package com.lucaticket.ticketservice.service.impl;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.ticketservice.model.Ticket;
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
 import com.lucaticket.ticketservice.repository.TicketRepository;
 import com.lucaticket.ticketservice.service.TicketService;
@@ -23,5 +26,10 @@ public class TicketServiceImpl implements TicketService{
 	 */
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
 		return new ResponseEntity<TicketResponse>(ticketRepository.save(ticketRequest.toEntity()).toDTO(), HttpStatus.CREATED);
+	}
+	public ResponseEntity<List<Ticket>> listTickets(){
+		//REcupera todos los tickets de la bdd
+		List<Ticket> tickets = ticketRepository.findAll();
+		return ResponseEntity.ok(tickets);
 	}
 }
