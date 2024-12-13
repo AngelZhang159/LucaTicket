@@ -24,11 +24,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest) {
 		// @Olivord
-		if(userRepository.findById(userRequest.getMail()).isPresent()) {
+		if (userRepository.findById(userRequest.getMail()).isPresent()) {
 			throw new UserAlreadyExistsException("El email ya está registrado " + userRequest.getMail());
 		}
-		
-		return new ResponseEntity<>(userRepository.save(userRequest.toEntity()).toDto(),HttpStatus.CREATED);
+
+		return new ResponseEntity<>(userRepository.save(userRequest.toEntity()).toDto(), HttpStatus.CREATED);
 	}
 
 }
