@@ -1,32 +1,35 @@
 package com.lucaticket.event.model.dto;
 
-import java.time.LocalDateTime;
-
-import com.lucaticket.event.model.enums.Genre;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object (DTO) que representa una respuesta resumida de un evento.
+ * Este objeto se utiliza para enviar información básica sobre un evento al cliente,
+ * como su nombre, precios y ubicación.
+ * @author Angel
+ * @version 1.0
+ * @since 2024-12-11
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventResponse {
 
-	private String name;
+    /** Identificador único del evento. */
+    private long id;
 
-	private String description;
+    /** Nombre del evento. */
+    private String name;
 
-	private LocalDateTime eventDate;
+    /** Precio mínimo de entrada al evento. */
+    private double minPrice;
 
-	private double minPrice;
+    /** Precio máximo de entrada al evento. */
+    private double maxPrice;
 
-	private double maxPrice;
-
-	private String location;
-
-	private String venueName;
-
-	private Genre genre;
+    /** Ubicación del evento, como ciudad o dirección específica. */
+    private String location;
 
 }
