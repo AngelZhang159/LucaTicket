@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.lucaticket.ticketservice.model.Ticket;
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
+import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.repository.TicketRepository;
 import com.lucaticket.ticketservice.service.TicketService;
 
@@ -15,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TicketServiceImpl implements TicketService{
+public class TicketServiceImpl implements TicketService {
 
 	private final TicketRepository ticketRepository;
 
@@ -25,11 +26,16 @@ public class TicketServiceImpl implements TicketService{
 	 * @return ticketResponse
 	 */
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
-		return new ResponseEntity<TicketResponse>(ticketRepository.save(ticketRequest.toEntity()).toDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<TicketResponse>(ticketRepository.save(ticketRequest.toEntity()).toDTO(),
+				HttpStatus.CREATED);
 	}
-	public ResponseEntity<List<Ticket>> listTickets(){
-		//REcupera todos los tickets de la bdd
+
+	public ResponseEntity<List<TicketResponse>> listTickets() {
+		// REcupera todos los tickets de la bdd
 		List<Ticket> tickets = ticketRepository.findAll();
-		return ResponseEntity.ok(tickets);
+		if (tickets.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(tickets.stream().map(t -> t.toDTO()).toList());
 	}
 }
