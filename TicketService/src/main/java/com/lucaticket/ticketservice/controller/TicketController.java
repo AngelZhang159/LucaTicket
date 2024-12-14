@@ -14,10 +14,12 @@ import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.service.TicketService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ticket")
+@Slf4j
 public class TicketController {
 
 	private final TicketService ticketService;
@@ -30,6 +32,7 @@ public class TicketController {
 	 */
 	@PostMapping
 	ResponseEntity<TicketResponse> save(@RequestBody TicketRequest ticketRequest ) {
+		log.info("Controller: Guardando nuevo ticket: " + ticketRequest.toString());
 		return ticketService.save(ticketRequest);
 	}
 
@@ -39,6 +42,7 @@ public class TicketController {
 	 */
 	@GetMapping
 	ResponseEntity<List<TicketResponse>> listTickets() {
+		log.info("Controller: Listando todos los tickets:");
 		return ticketService.listTickets();
 	}
 
