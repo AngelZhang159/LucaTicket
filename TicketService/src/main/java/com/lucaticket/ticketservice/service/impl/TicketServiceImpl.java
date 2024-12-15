@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.ticketservice.error.NoTicketsFoundException;
+import com.lucaticket.ticketservice.error.TicketAlreadyExistsException;
 import com.lucaticket.ticketservice.model.Ticket;
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
@@ -25,23 +27,38 @@ public class TicketServiceImpl implements TicketService {
 	/**
 	 * @author Angel
 	 * @param ticketRequest
-	 * @return ticketResponse
+	 * @return ticketRespon
+	 * @throws TicketAlreadyExistsException
 	 */
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
+		// update v.1.1
+		// Yuji
+		boolean ticketExists = ticketRepository.existsByEmailAndEventId(
+				ticketRequest.getEmail(), ticketRequest.getIdEvent());
+		if (ticketExists) {
+			throw new TicketAlreadyExistsException("El ticket ya existe para el evento con ese email");
+		}
+
 		log.info("Service: Guardando nuevo ticket: " + ticketRequest.toString());
-		return new ResponseEntity<>(ticketRepository.save(ticketRequest.toEntity()).toDTO(),
-				HttpStatus.CREATED);
+		return new ResponseEntity<>(ticketRepository.save(ticketRequest.toEntity()).toDTO(), HttpStatus.CREATED);
 	}
 
+	/**
+	 * @author Angel
+	 * @return List<Ticket>
+	 * @throws NoTicketsFoundException
+	 */
 	public ResponseEntity<List<TicketResponse>> listTickets() {
 		// REcupera todos los tickets de la bdd
+		// Yuji
+		// update v.1.1
 		log.info("Service: Listando todos los tickets");
 		List<Ticket> tickets = ticketRepository.findAll();
 		if (tickets.isEmpty()) {
-			log.info("Service: No se han encontrado tickets. 204");
-			return ResponseEntity.noContent().build();
+			throw new NoTicketsFoundException("No hay tickets registrados en la base de datos");
 		}
-		log.info("Service: Devolviendo tickets, tamaño: " + tickets.size() + ". 200");
+
+		log.info("Service: Devolviendo tickets, tamaño: " + tickets.size());
 		return ResponseEntity.ok(tickets.stream().map(Ticket::toDTO).toList());
 	}
 }
