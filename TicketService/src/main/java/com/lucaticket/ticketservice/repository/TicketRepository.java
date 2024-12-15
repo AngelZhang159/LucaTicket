@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.lucaticket.ticketservice.model.Ticket;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long>{
+    boolean existsByEmailAndEventId(String email, Long eventId);
 }
