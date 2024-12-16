@@ -95,7 +95,7 @@ public class EventServiceImpl implements EventService {
 		List<EventResponse> eventResponses = eventRepository.findByName(name).stream().map(Event::toDto).toList();
 		if (eventResponses.isEmpty()) {
 			log.info("No se han encontrado eventos con el nombre: " + name);
-			ResponseEntity.noContent().build();
+			return ResponseEntity.noContent().build();
 		}
 		log.info("Devolviendo listado con " + eventResponses.size() + " elementos");
 		return ResponseEntity.ok(eventResponses);
