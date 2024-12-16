@@ -38,9 +38,13 @@ public class EventServiceImpl implements EventService {
      * @return Un objeto {@code EventResponse} con los datos del evento creado.
      */
     @Override
-    public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
+    public ResponseEntity<EventCreateDelete> saveEvent(EventRequest eventoRequest) {
         comprobarPrecio(eventoRequest.getMinPrice(), eventoRequest.getMaxPrice());
-        return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
+        Event event = eventRepository.save(eventoRequest.toEntity());
+        return ResponseEntity.ok(new EventCreateDelete(
+                "Created successfully",
+                event.getId(),
+                event.getName()));
     }
 
     /**
@@ -52,9 +56,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<List<EventResponse>> getEvents() {
         List<EventResponse> events = eventRepository.findAll()
-                                                     .stream()
-                                                     .map(Event::toDto)
-                                                     .toList();
+                .stream()
+                .map(Event::toDto)
+                .toList();
 
         return events.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : ResponseEntity.ok(events);
     }
@@ -63,7 +67,8 @@ public class EventServiceImpl implements EventService {
      * Obtiene información detallada de un evento por su ID.
      * 
      * @param eventId Identificador único del evento.
-     * @return Un objeto {@code DetailedEventResponse} con los datos completos del evento.
+     * @return Un objeto {@code DetailedEventResponse} con los datos completos del
+     *         evento.
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
@@ -84,9 +89,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<List<EventResponse>> findByName(String name) {
         List<EventResponse> eventResponses = eventRepository.findByName(name)
-                                                             .stream()
-                                                             .map(Event::toDto)
-                                                             .toList();
+                .stream()
+                .map(Event::toDto)
+                .toList();
 
         return eventResponses.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(eventResponses);
     }
@@ -101,9 +106,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<DetailedEventResponse> getDetailedInfoEventByName(String eventName) {
         Event event = eventRepository.findByName(eventName)
-                                     .stream()
-                                     .findFirst()
-                                     .orElseThrow(() -> new InvalidDataException("El evento con nombre '" + eventName + "' no existe."));
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new InvalidDataException("El evento con nombre '" + eventName + "' no existe."));
 
         return ResponseEntity.ok(event.toDetailedDto());
     }
@@ -112,7 +117,8 @@ public class EventServiceImpl implements EventService {
      * Actualiza un evento existente con los datos proporcionados.
      * 
      * @param event Objeto {@code EventDTO} con los nuevos datos del evento.
-     * @return Un objeto {@code DetailedEventResponse} con los datos del evento actualizado.
+     * @return Un objeto {@code DetailedEventResponse} con los datos del evento
+     *         actualizado.
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
@@ -163,9 +169,9 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new InvalidDataException("No se ha encontrado el evento con el ID: " + id));
         eventRepository.delete(event);
         return ResponseEntity.ok(new EventCreateDelete(
-            "Event deleted successfully",
-            id,
-            event.getName()));
+                "Event deleted successfully",
+                id,
+                event.getName()));
     }
 
     /**
