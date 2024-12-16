@@ -33,12 +33,6 @@ public class TicketServiceImpl implements TicketService {
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
 		// update v.1.1
 		// Yuji
-		boolean ticketExists = ticketRepository.existsByEmailAndIdEvent(
-				ticketRequest.getEmail(), ticketRequest.getIdEvent());
-		if (ticketExists) {
-			throw new TicketAlreadyExistsException("El ticket ya existe para el evento con ese email");
-		}
-
 		log.info("Service: Guardando nuevo ticket: " + ticketRequest.toString());
 		return new ResponseEntity<>(ticketRepository.save(ticketRequest.toEntity()).toDTO(), HttpStatus.CREATED);
 	}
