@@ -37,7 +37,7 @@ class TicketServiceApplicationTests {
 	 **/
 	
 	@Test
-	public void testListTicketMatchesDatabaseSize() {
+	public void test_List_Ticket_Matches_Database_Size() {
 		// Limpiar la base de datos antes de iniciar la prueba
         ticketRepository.deleteAll();
 		
@@ -52,6 +52,25 @@ class TicketServiceApplicationTests {
         // Verificar que el tamaño de la lista devuelta coincide con los elementos en la base de datos
         assertEquals(2, response.getBody().size(), "El número de tickets devueltos debe coincidir con el de la base de datos.");
     }
+	
+	/**
+	 * @author Alberto de la Blanca
+	 * al listar y no haya tickets, devuelva un 204.
+	 * 
+	 **/
+	@Test
+	public void test_ListTicket_When_No_Ticket_Exist() {
+		
+		ticketRepository.deleteAll();
+		ResponseEntity<List<TicketResponse>> response = ticketController.listTickets();
+		
+		// Verificar que la respuesta tiene el código de estado 204 (No Content)
+        assertEquals(204, response.getStatusCode(), "Cuando no hay tickets, debería devolver 204 No Content.");
+        // Verificar que el cuerpo de la respuesta está vacío
+        assertEquals(null, response.getBody(), "El cuerpo de la respuesta debe ser null cuando no hay tickets.");
+  
+	}
+	
 }
 
 
