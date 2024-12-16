@@ -41,6 +41,7 @@ public class TicketController {
 	 * @return una lista con todos los tickets registrados
 	 */
 	@GetMapping
+	public
 	ResponseEntity<List<TicketResponse>> listTickets() {
 		log.info("Controller: Listando todos los tickets:");
 		return ticketService.listTickets();
