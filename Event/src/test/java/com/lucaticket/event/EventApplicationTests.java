@@ -33,6 +33,7 @@ import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
@@ -348,7 +349,7 @@ class EventApplicationTests {
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
 		
-		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(null);
 		
@@ -365,7 +366,7 @@ class EventApplicationTests {
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
 		
-		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
 		
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}

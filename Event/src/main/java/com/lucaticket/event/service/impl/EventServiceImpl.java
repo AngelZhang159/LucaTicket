@@ -11,6 +11,7 @@ import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.repository.EventRepository;
@@ -157,11 +158,14 @@ public class EventServiceImpl implements EventService {
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
-    public ResponseEntity<EventResponse> deleteEvent(long id) {
+    public ResponseEntity<EventCreateDelete> deleteEvent(long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new InvalidDataException("No se ha encontrado el evento con el ID: " + id));
         eventRepository.delete(event);
-        return ResponseEntity.ok(event.toDto());
+        return ResponseEntity.ok(new EventCreateDelete(
+            "Event deleted successfully",
+            id,
+            event.getName()));
     }
 
     /**
