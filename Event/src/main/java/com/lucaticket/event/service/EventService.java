@@ -1,11 +1,13 @@
 package com.lucaticket.event.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 
@@ -16,7 +18,7 @@ public interface EventService {
 	 * @param eventoRequest
 	 * @return un DTO de respuesta de "evento" con datos de la creacion
 	 */
-	ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest);
+	ResponseEntity<EventCreateDelete> saveEvent(EventRequest eventoRequest);
 	
 	/**
 	 * @author Raul
@@ -54,7 +56,7 @@ public interface EventService {
 	 * @param eventRequest
 	 * @return El evento actualizado
 	 */
-	ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event);
+	ResponseEntity<Map<String, Object>> updateEvent(EventDTO event);
 
 	
 	/**
@@ -62,6 +64,6 @@ public interface EventService {
 	 * @param id
 	 * @return El evento borrado
 	 */
-	ResponseEntity<EventResponse> deleteEvent(long id);
+	ResponseEntity<EventCreateDelete> deleteEvent(long id);
 	
 }

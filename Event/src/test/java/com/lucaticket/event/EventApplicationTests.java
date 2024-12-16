@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -33,6 +34,7 @@ import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
@@ -98,7 +100,7 @@ class EventApplicationTests {
 		// <-- MOCKING ->>
 		when(eventRepository.save(any(Event.class))).thenReturn(evento);
 
-		ResponseEntity<EventResponse> result = eventService.saveEvent(peticionEvento);
+		ResponseEntity<EventCreateDelete> result = eventService.saveEvent(peticionEvento);
 
 		// <-- Aserciones -->
 		assertNotNull(result);
@@ -219,7 +221,7 @@ class EventApplicationTests {
 
 		when(eventRepository.save(any(Event.class))).thenReturn(evento1);
 
-		ResponseEntity<EventResponse> entity = eventService.saveEvent(new EventRequest());
+		ResponseEntity<EventCreateDelete> entity = eventService.saveEvent(new EventRequest());
 
 		assertEquals(HttpStatus.OK, entity.getStatusCode());
 
@@ -289,7 +291,7 @@ class EventApplicationTests {
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
 		when(eventRepository.findAll()).thenReturn(eventosBase);
 		
-		ResponseEntity<DetailedEventResponse> respuesta = eventService.updateEvent(eventoUpdateDto);
+		ResponseEntity<Map<String, Object>> respuesta = eventService.updateEvent(eventoUpdateDto);
 		ResponseEntity<List<EventResponse>> listaRespuesta = eventService.getEvents();
 		
 		
@@ -313,7 +315,7 @@ class EventApplicationTests {
 		when(eventRepository.save(any(Event.class))).thenReturn(eventoUpdate);
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
 		
-		ResponseEntity<DetailedEventResponse> respuesta = eventService.updateEvent(eventoUpdateDto);
+		ResponseEntity<Map<String, Object>> respuesta = eventService.updateEvent(eventoUpdateDto);
 		
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}
@@ -348,7 +350,7 @@ class EventApplicationTests {
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
 		
-		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(null);
 		
@@ -365,7 +367,7 @@ class EventApplicationTests {
 		
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
 		
-		ResponseEntity<EventResponse> respuesta = eventService.deleteEvent(event.get().getId());
+		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
 		
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}

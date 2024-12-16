@@ -1,6 +1,9 @@
 package com.lucaticket.event.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.repository.EventRepository;
@@ -37,9 +41,13 @@ public class EventServiceImpl implements EventService {
      * @return Un objeto {@code EventResponse} con los datos del evento creado.
      */
     @Override
-    public ResponseEntity<EventResponse> saveEvent(EventRequest eventoRequest) {
+    public ResponseEntity<EventCreateDelete> saveEvent(EventRequest eventoRequest) {
         comprobarPrecio(eventoRequest.getMinPrice(), eventoRequest.getMaxPrice());
-        return ResponseEntity.ok(eventRepository.save(eventoRequest.toEntity()).toDto());
+        Event event = eventRepository.save(eventoRequest.toEntity());
+        return ResponseEntity.ok(new EventCreateDelete(
+                "Created successfully",
+                event.getId(),
+                event.getName()));
     }
 
     /**
@@ -51,9 +59,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<List<EventResponse>> getEvents() {
         List<EventResponse> events = eventRepository.findAll()
-                                                     .stream()
-                                                     .map(Event::toDto)
-                                                     .toList();
+                .stream()
+                .map(Event::toDto)
+                .toList();
 
         return events.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : ResponseEntity.ok(events);
     }
@@ -62,7 +70,8 @@ public class EventServiceImpl implements EventService {
      * Obtiene información detallada de un evento por su ID.
      * 
      * @param eventId Identificador único del evento.
-     * @return Un objeto {@code DetailedEventResponse} con los datos completos del evento.
+     * @return Un objeto {@code DetailedEventResponse} con los datos completos del
+     *         evento.
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
@@ -83,9 +92,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<List<EventResponse>> findByName(String name) {
         List<EventResponse> eventResponses = eventRepository.findByName(name)
-                                                             .stream()
-                                                             .map(Event::toDto)
-                                                             .toList();
+                .stream()
+                .map(Event::toDto)
+                .toList();
 
         return eventResponses.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(eventResponses);
     }
@@ -100,9 +109,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public ResponseEntity<DetailedEventResponse> getDetailedInfoEventByName(String eventName) {
         Event event = eventRepository.findByName(eventName)
-                                     .stream()
-                                     .findFirst()
-                                     .orElseThrow(() -> new InvalidDataException("El evento con nombre '" + eventName + "' no existe."));
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new InvalidDataException("El evento con nombre '" + eventName + "' no existe."));
 
         return ResponseEntity.ok(event.toDetailedDto());
     }
@@ -111,42 +120,83 @@ public class EventServiceImpl implements EventService {
      * Actualiza un evento existente con los datos proporcionados.
      * 
      * @param event Objeto {@code EventDTO} con los nuevos datos del evento.
-     * @return Un objeto {@code DetailedEventResponse} con los datos del evento actualizado.
+     * @return Un objeto {@code DetailedEventResponse} con los datos del evento
+     *         actualizado.
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
-    public ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event) {
-        Event eventOld = eventRepository.findById(event.getId())
-                .orElseThrow(() -> new InvalidDataException("El evento con el ID: " + event.getId() + " no existe."));
+    public ResponseEntity<Map<String, Object>> updateEvent(EventDTO eventDTO) {
+        // Buscar evento existente o lanzar excepción si no se encuentra
+        Event eventOld = eventRepository.findById(eventDTO.getId())
+                .orElseThrow(
+                        () -> new InvalidDataException("El evento con el ID: " + eventDTO.getId() + " no existe."));
 
-        Event eventNew = new Event(eventOld.getId(), eventOld.getName(), eventOld.getDescription(),
-                eventOld.getEventDate(), eventOld.getMinPrice(), eventOld.getMaxPrice(), eventOld.getLocation(),
-                eventOld.getVenueName(), eventOld.getGenre());
+        // Crear un mapa para almacenar los campos actualizados
+        Map<String, Object> updatedFields = new HashMap<>();
 
-        if (event.getName() != null && !event.getName().isBlank()) {
-            eventNew.setName(event.getName());
-        }
-        if (event.getDescription() != null && !event.getDescription().isBlank()) {
-            eventNew.setDescription(event.getDescription());
-        }
-        if (event.getEventDate() != null) {
-            eventNew.setEventDate(event.getEventDate());
-        }
-        if (event.getMinPrice() > 0) {
-            eventNew.setMinPrice(event.getMinPrice());
-        }
-        if (event.getMaxPrice() > 0) {
-            eventNew.setMaxPrice(event.getMaxPrice());
-        }
-        if (event.getLocation() != null && !event.getLocation().isBlank()) {
-            eventNew.setLocation(event.getLocation());
-        }
-        if (event.getGenre() != null) {
-            eventNew.setGenre(event.getGenre());
-        }
+        // Actualizar campos y registrar cambios solo si son válidos y diferentes
+        Optional.ofNullable(eventDTO.getName())
+                .filter(name -> !name.isBlank() && !name.equals(eventOld.getName()))
+                .ifPresent(name -> {
+                    eventOld.setName(name);
+                    updatedFields.put("name", name);
+                });
 
-        comprobarPrecio(eventNew.getMinPrice(), eventNew.getMaxPrice());
-        return ResponseEntity.ok(eventRepository.save(eventNew).toDetailedDto());
+        Optional.ofNullable(eventDTO.getDescription())
+                .filter(description -> !description.isBlank() && !description.equals(eventOld.getDescription()))
+                .ifPresent(description -> {
+                    eventOld.setDescription(description);
+                    updatedFields.put("description", description);
+                });
+
+        Optional.ofNullable(eventDTO.getEventDate())
+                .filter(date -> !date.equals(eventOld.getEventDate()))
+                .ifPresent(date -> {
+                    eventOld.setEventDate(date);
+                    updatedFields.put("eventDate", date);
+                });
+
+        Optional.ofNullable(eventDTO.getMinPrice())
+                .filter(minPrice -> minPrice > 0 && minPrice != eventOld.getMinPrice())
+                .ifPresent(minPrice -> {
+                    eventOld.setMinPrice(minPrice);
+                    updatedFields.put("minPrice", minPrice);
+                });
+
+        Optional.ofNullable(eventDTO.getMaxPrice())
+                .filter(maxPrice -> maxPrice > 0 && maxPrice != eventOld.getMaxPrice())
+                .ifPresent(maxPrice -> {
+                    eventOld.setMaxPrice(maxPrice);
+                    updatedFields.put("maxPrice", maxPrice);
+                });
+
+        Optional.ofNullable(eventDTO.getLocation())
+                .filter(location -> !location.isBlank() && !location.equals(eventOld.getLocation()))
+                .ifPresent(location -> {
+                    eventOld.setLocation(location);
+                    updatedFields.put("location", location);
+                });
+
+        Optional.ofNullable(eventDTO.getGenre())
+                .filter(genre -> genre != eventOld.getGenre())
+                .ifPresent(genre -> {
+                    eventOld.setGenre(genre);
+                    updatedFields.put("genre", genre);
+                });
+
+        // Validación de precios
+        comprobarPrecio(eventOld.getMinPrice(), eventOld.getMaxPrice());
+
+        // Guardar cambios
+        eventRepository.save(eventOld);
+
+        // Añadir mensaje de éxito
+        if (updatedFields.isEmpty()) {
+            updatedFields.put("message", "No ha habido cambios en el evento");
+        } else updatedFields.put("message", "El evento ha sido modificado correctamente");
+
+        // Devolver solo los campos actualizados
+        return ResponseEntity.ok(updatedFields);
     }
 
     /**
@@ -157,11 +207,14 @@ public class EventServiceImpl implements EventService {
      * @throws InvalidDataException Si el evento no existe.
      */
     @Override
-    public ResponseEntity<EventResponse> deleteEvent(long id) {
+    public ResponseEntity<EventCreateDelete> deleteEvent(long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new InvalidDataException("No se ha encontrado el evento con el ID: " + id));
         eventRepository.delete(event);
-        return ResponseEntity.ok(event.toDto());
+        return ResponseEntity.ok(new EventCreateDelete(
+                "Event deleted successfully",
+                id,
+                event.getName()));
     }
 
     /**

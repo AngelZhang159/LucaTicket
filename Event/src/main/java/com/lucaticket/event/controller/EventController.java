@@ -1,6 +1,7 @@
 package com.lucaticket.event.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.service.EventService;
@@ -37,7 +39,7 @@ public class EventController {
 	 * @Olivord Guarda el evento en la base de datos
 	 */
 	@PostMapping
-	public ResponseEntity<EventResponse> saveEvent(@RequestBody @Valid EventRequest eventoRequest) {
+	public ResponseEntity<EventCreateDelete> saveEvent(@RequestBody @Valid EventRequest eventoRequest) {
 		log.info("EventController.saveEvent");
 		return eventService.saveEvent(eventoRequest);
 	}
@@ -79,14 +81,16 @@ public class EventController {
 	 * @return evento detallado
 	 */
 
-	@PutMapping("/update")
-	public ResponseEntity<DetailedEventResponse> updateEvent(@RequestBody EventDTO event) {
+	@PutMapping("/update/{id}")
+	public ResponseEntity<Map<String, Object>> updateEvent(@PathVariable long id, @RequestBody @Valid EventDTO event) {
+		event.setId(id);
 		return eventService.updateEvent(event);
 	}
 
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<EventResponse> deleteEvent(@PathVariable long id) {
+	public ResponseEntity<EventCreateDelete> deleteEvent(@PathVariable long id) {
 		return eventService.deleteEvent(id);
 	}
+	
 }
