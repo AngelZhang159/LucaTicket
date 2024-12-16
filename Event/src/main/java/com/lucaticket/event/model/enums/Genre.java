@@ -1,6 +1,9 @@
 package com.lucaticket.event.model.enums;
 
-// @AngelZhang159
+/**
+ * Enum de los géneros disponibles
+ * @author Angel
+ */
 public enum Genre {
     POP,
     ROCK,

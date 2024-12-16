@@ -74,7 +74,7 @@ public class EventController {
 	public ResponseEntity<List<EventResponse>> listByName(@PathVariable String name) {
 		return eventService.findByName(name);
 	}
-	
+
 	/**
 	 * @author Angel
 	 * @param event
@@ -87,10 +87,15 @@ public class EventController {
 		return eventService.updateEvent(event);
 	}
 
-	
+	/**
+	 * @author Angel
+	 * @param id
+	 * @return evento borrado
+	 */
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<EventCreateDelete> deleteEvent(@PathVariable long id) {
 		return eventService.deleteEvent(id);
 	}
-	
+
 }
