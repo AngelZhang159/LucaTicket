@@ -13,6 +13,7 @@ import com.lucaticket.ticketservice.model.dto.TicketRequest;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.service.TicketService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,7 @@ public class TicketController {
 	 *         ha guardado
 	 */
 	@PostMapping
-	ResponseEntity<TicketResponse> save(@RequestBody TicketRequest ticketRequest ) {
+	ResponseEntity<TicketResponse> save(@RequestBody @Valid TicketRequest ticketRequest ) {
 		log.info("Controller: Guardando nuevo ticket: " + ticketRequest.toString());
 		return ticketService.save(ticketRequest);
 	}
