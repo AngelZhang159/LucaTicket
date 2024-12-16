@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "bank", url = "http://banco.eu-west-3.elasticbeanstalk.com")
-public class BancoFeignClient {
+public interface BancoFeignClient {
 
 	@PostMapping("/pasarela/validaruser")
 	ResponseEntity<ValidarUserResponse> validarUser(@RequestParam("user") String user,
