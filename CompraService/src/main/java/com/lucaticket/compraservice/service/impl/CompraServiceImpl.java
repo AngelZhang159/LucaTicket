@@ -17,6 +17,7 @@ import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
 import com.lucaticket.compraservice.model.dto.TicketRequest;
+import com.lucaticket.compraservice.model.dto.TicketResponse;
 import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
 import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
 import com.lucaticket.compraservice.service.CompraService;
@@ -25,61 +26,84 @@ import com.lucaticket.feignclients.EventFeignClient;
 import com.lucaticket.feignclients.TicketFeignClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @EnableFeignClients
+@Slf4j
 public class CompraServiceImpl implements CompraService {
 
-	@Autowired
 	private final EventFeignClient eventFeign;
-	@Autowired
 	private final BancoFeignClient bancoFeign;
-	@Autowired
 	private final TicketFeignClient ticketFeign;
 
 	@Override
 	public ResponseEntity<CompraResponse> buy(CompraRequest compraRequest) {
 
+		log.info("Nueva compra: " + compraRequest.toString());
 		ResponseEntity<DetailedEventResponse> detailedEventResponse = eventExists(compraRequest);
 
 		ResponseEntity<ValidarUserResponse> validarUserResponse = validateUser();
 
 		validatePurchase(compraRequest, detailedEventResponse, validarUserResponse);
 
-		
-		ticketFeign.save(new TicketRequest(compraRequest.getEmail(), compraRequest.getIdEvento()));
+		saveTicket(compraRequest);
 
 		return ResponseEntity.ok(new CompraResponse(compraRequest.getNombreTitular(), compraRequest.getEmail(),
-				compraRequest.getIdEvento(), detailedEventResponse.getBody().getName(), compraRequest.getCantidad(), LocalDateTime.now()));
+				compraRequest.getIdEvento(), detailedEventResponse.getBody().getName(), compraRequest.getCantidad(),
+				LocalDateTime.now()));
+	}
+
+	private void saveTicket(CompraRequest compraRequest) {
+		log.info("Guardando ticket de la compra: " + compraRequest.toString());
+		ResponseEntity<TicketResponse> ticketResponse = ticketFeign
+				.save(new TicketRequest(compraRequest.getEmail(), compraRequest.getIdEvento()));
+
+		if (ticketResponse.getStatusCode() != HttpStatus.OK) {
+			log.info("Error al guardar el ticket en la base de datos: " + ticketResponse.getBody());
+		}
+		log.info("Ticket guardado con éxito");
 	}
 
 	private void validatePurchase(CompraRequest compraRequest,
 			ResponseEntity<DetailedEventResponse> detailedEventResponse,
 			ResponseEntity<ValidarUserResponse> validarUserResponse) {
-		ResponseEntity<ValidarCompraResponse> validarCompraResponse = bancoFeign.validarCompra(
-				validarUserResponse.getBody().getToken(),
-				rellenarDatos(compraRequest, detailedEventResponse.getBody()));
+
+		String token = validarUserResponse.getBody().getToken();
+		CompraRequest compra = rellenarDatos(compraRequest, detailedEventResponse.getBody());
+
+		log.info("Validando la compra, token: " + token + ", compra: " + compra.toString());
+
+		ResponseEntity<ValidarCompraResponse> validarCompraResponse = bancoFeign.validarCompra(token, compra);
 
 		if (validarCompraResponse.getStatusCode() != HttpStatus.OK) {
+			log.error("Error al validar la compra: " + validarCompraResponse.toString());
 			throw new DatosCompraInvalidosException(validarCompraResponse.getBody().getError().substring(0, 9));
 		}
+		log.info("Compra validada con éxito");
 	}
 
 	private ResponseEntity<ValidarUserResponse> validateUser() {
+		log.info("Validando usuario con el banco, user:" + ValidUser.name + ", password" + ValidUser.password);
 		ResponseEntity<ValidarUserResponse> validarUserResponse = bancoFeign.validarUser(ValidUser.name,
 				ValidUser.password);
 		if (validarUserResponse.getStatusCode() != HttpStatus.OK) {
+			log.error("El usuario no es válido");
 			throw new DatosInvalidosException("User o password incorrecta");
 		}
+		log.info("Usuario validado con éxito");
 		return validarUserResponse;
 	}
 
 	private ResponseEntity<DetailedEventResponse> eventExists(CompraRequest compraRequest) {
+		log.info("Comprobando evento con ID: " + compraRequest.getIdEvento());
 		ResponseEntity<DetailedEventResponse> detailedEventResponse = eventFeign.getDetail(compraRequest.getIdEvento());
 		if (detailedEventResponse.getStatusCode() != HttpStatus.OK) {
+			log.error("El evento con ID: " + compraRequest.getIdEvento() + " no existe");
 			throw new EventoNotFoundException("El evento " + compraRequest.getIdEvento() + " no existe");
 		}
+		log.info("Evento con ID: " + compraRequest.getIdEvento() + " encontrado: " + detailedEventResponse.toString());
 		return detailedEventResponse;
 	}
 
