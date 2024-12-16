@@ -87,4 +87,5 @@ public class EventController {
 	public ResponseEntity<EventResponse> deleteEvent(@PathVariable long id) {
 		return eventService.deleteEvent(id);
 	}
+	
 }
