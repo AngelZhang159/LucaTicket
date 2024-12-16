@@ -20,22 +20,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import jakarta.servlet.http.HttpServletResponse;
 
-
 @RestControllerAdvice
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(InvalidDataException.class)
 	public void springHandleNotFound(HttpServletResponse response) throws IOException {
 		logger.info("------ DATOS INVALIDOS");
-		response.sendError(HttpStatus.NOT_FOUND.value());
+		response.sendError(HttpStatus.BAD_REQUEST.value());
 	}
-	
+
 	@ExceptionHandler(DatosCompraInvalidosException.class)
 	public void datosCompraInvalidos(HttpServletResponse response) throws IOException {
 		logger.info("------ DATOS INVALIDOS");
-		response.sendError(HttpStatus.NOT_FOUND.value());
+		response.sendError(HttpStatus.BAD_REQUEST.value());
 	}
-	
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
