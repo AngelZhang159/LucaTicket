@@ -36,7 +36,7 @@ public class EventController {
 	 * @Olivord Guarda el evento en la base de datos
 	 */
 	@PostMapping
-	public ResponseEntity<EventResponse> saveEvent(@RequestBody @Valid EventRequest eventoRequest) {
+	public ResponseEntity<EventCreateDelete> saveEvent(@RequestBody @Valid EventRequest eventoRequest) {
 		log.info("EventController.saveEvent");
 		return eventService.saveEvent(eventoRequest);
 	}
