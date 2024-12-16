@@ -33,7 +33,7 @@ public class TicketServiceImpl implements TicketService {
 	public ResponseEntity<TicketResponse> save(TicketRequest ticketRequest) {
 		// update v.1.1
 		// Yuji
-		boolean ticketExists = ticketRepository.existsByEmailAndEventId(
+		boolean ticketExists = ticketRepository.existsByEmailAndIdEvent(
 				ticketRequest.getEmail(), ticketRequest.getIdEvent());
 		if (ticketExists) {
 			throw new TicketAlreadyExistsException("El ticket ya existe para el evento con ese email");
