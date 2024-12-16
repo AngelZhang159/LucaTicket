@@ -1,7 +1,9 @@
 package com.lucaticket.compraservice.model.dto;
 
 import java.time.LocalDateTime;
+
 import com.lucaticket.compraservice.model.enums.Genre;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
