@@ -10,7 +10,7 @@ import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
 @FeignClient(name = "event")
 public interface EventFeignClient {
 
-	@GetMapping("/detail/{id}")
+	@GetMapping("/event/detail/{id}")
 	public ResponseEntity<DetailedEventResponse> getDetail(@PathVariable long id);
 
 }
