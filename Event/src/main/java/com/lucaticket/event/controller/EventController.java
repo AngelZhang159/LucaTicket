@@ -1,6 +1,7 @@
 package com.lucaticket.event.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,8 +79,9 @@ public class EventController {
 	 * @return evento detallado
 	 */
 
-	@PutMapping("/update")
-	public ResponseEntity<DetailedEventResponse> updateEvent(@RequestBody EventDTO event) {
+	@PutMapping("/update/{id}")
+	public ResponseEntity<Map<String, Object>> updateEvent(@PathVariable long id, @RequestBody @Valid EventDTO event) {
+		event.setId(id);
 		return eventService.updateEvent(event);
 	}
 

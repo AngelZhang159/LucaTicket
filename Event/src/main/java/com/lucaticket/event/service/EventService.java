@@ -1,6 +1,7 @@
 package com.lucaticket.event.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
@@ -55,7 +56,7 @@ public interface EventService {
 	 * @param eventRequest
 	 * @return El evento actualizado
 	 */
-	ResponseEntity<DetailedEventResponse> updateEvent(EventDTO event);
+	ResponseEntity<Map<String, Object>> updateEvent(EventDTO event);
 
 	
 	/**
