@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TicketResponse {
 
+	private Long id;
 	/**
 	 * Correo electrónico del usuario asociado al ticket.
 	 */

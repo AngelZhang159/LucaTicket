@@ -51,6 +51,7 @@ public class Ticket {
 
 		TicketResponse response = new TicketResponse();
 
+		response.setId(this.id);
 		response.setEmail(this.email);
 		response.setIdEvent(this.idEvent);
 
