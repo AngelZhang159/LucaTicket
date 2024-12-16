@@ -1,8 +1,5 @@
 package com.lucaticket.compraservice.model.dto;
 
-import java.time.Month;
-import java.time.Year;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -17,10 +14,10 @@ public class CompraRequest {
 	@Email @NotBlank
 	private String email; 
 	@NotBlank
-	private String ownerName;
-	private Long cardNumber; 
-	private Month expirationMonth;
-	private Year expirationYear;
+	private String nombreTitular;
+	private Long numeroTarjeta; 
+	private int mesCaducidad;
+	private int yearCaducidad;
 	private int cvv;
 	private String emisor;
 	private String concepto;
