@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.lucaticket.compraservice.error.DatosCompraInvalidosException;
+import com.lucaticket.compraservice.error.DatosInvalidosException;
+import com.lucaticket.compraservice.error.EventoNotFoundException;
 import com.lucaticket.compraservice.model.ValidUser;
 import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
@@ -39,30 +42,31 @@ public class CompraServiceImpl implements CompraService {
 		ResponseEntity<ValidarUserResponse> validarUserResponse = validateUser();
 
 		validatePurchase(compraRequest, detailedEventResponse, validarUserResponse);
-		
+
 //		ticket()
 
-		return ResponseEntity.ok(new CompraResponse(compraRequest.getOwnerName(), compraRequest.getEmail(),
-				compraRequest.getIdEvento(), detailedEventResponse.getBody().getName(), compraRequest.getCantidad(), LocalDateTime.now()));
+		return ResponseEntity.ok(
+				new CompraResponse(compraRequest.getOwnerName(), compraRequest.getEmail(), compraRequest.getIdEvento(),
+						detailedEventResponse.getBody().getName(), compraRequest.getCantidad(), LocalDateTime.now()));
 	}
 
 	private void validatePurchase(CompraRequest compraRequest,
 			ResponseEntity<DetailedEventResponse> detailedEventResponse,
 			ResponseEntity<ValidarUserResponse> validarUserResponse) {
-		ResponseEntity<ValidarCompraResponse> validarCompraResponse = bancoFeign
-				.validarCompra(validarUserResponse.getBody().getToken(), rellenarDatos(compraRequest, detailedEventResponse.getBody()));
-		
+		ResponseEntity<ValidarCompraResponse> validarCompraResponse = bancoFeign.validarCompra(
+				validarUserResponse.getBody().getToken(),
+				rellenarDatos(compraRequest, detailedEventResponse.getBody()));
+
 		if (validarCompraResponse.getStatusCode() != HttpStatus.OK) {
-//			throw new DatosCompraInvalidosException("Los datos de la compra son erroneos");
+			throw new DatosCompraInvalidosException(validarCompraResponse.getBody().getError().substring(0, 9));
 		}
-		
 	}
 
 	private ResponseEntity<ValidarUserResponse> validateUser() {
 		ResponseEntity<ValidarUserResponse> validarUserResponse = bancoFeign.validarUser(ValidUser.name,
 				ValidUser.password);
 		if (validarUserResponse.getStatusCode() != HttpStatus.OK) {
-//			throw new DatosInvalidosExcetpion("User o password incorrecta");
+			throw new DatosInvalidosException("User o password incorrecta");
 		}
 		return validarUserResponse;
 	}
@@ -70,7 +74,7 @@ public class CompraServiceImpl implements CompraService {
 	private ResponseEntity<DetailedEventResponse> eventExists(CompraRequest compraRequest) {
 		ResponseEntity<DetailedEventResponse> detailedEventResponse = eventFeign.getDetail(compraRequest.getIdEvento());
 		if (detailedEventResponse.getStatusCode() != HttpStatus.OK) {
-//			throw new EventoNotFoundException("El evento " + compraRequest.getIdEvento() + " no existe");
+			throw new EventoNotFoundException("El evento " + compraRequest.getIdEvento() + " no existe");
 		}
 		return detailedEventResponse;
 	}
@@ -81,7 +85,8 @@ public class CompraServiceImpl implements CompraService {
 		compraRequest.setEmisor("GRUPO 2 LUCATICKET");
 		compraRequest.setConcepto("EVENTO: [" + detailedEventResponse.getName() + "] ");
 		compraRequest.setCantidad(
-				aleatorio.nextDouble(detailedEventResponse.getMaxPrice() - detailedEventResponse.getMinPrice() + 1) + detailedEventResponse.getMinPrice());
+				aleatorio.nextDouble(detailedEventResponse.getMaxPrice() - detailedEventResponse.getMinPrice() + 1)
+						+ detailedEventResponse.getMinPrice());
 
 		return compraRequest;
 	}
