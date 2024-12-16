@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 
@@ -62,6 +63,6 @@ public interface EventService {
 	 * @param id
 	 * @return El evento borrado
 	 */
-	ResponseEntity<EventResponse> deleteEvent(long id);
+	ResponseEntity<EventCreateDelete> deleteEvent(long id);
 	
 }

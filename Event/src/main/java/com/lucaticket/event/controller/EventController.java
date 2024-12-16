@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventDTO;
+import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.service.EventService;
@@ -84,7 +85,7 @@ public class EventController {
 
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<EventResponse> deleteEvent(@PathVariable long id) {
+	public ResponseEntity<EventCreateDelete> deleteEvent(@PathVariable long id) {
 		return eventService.deleteEvent(id);
 	}
 	
