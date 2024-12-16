@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lucaticket.compraservice.model.dto.CompraRequest;
+import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
+import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
+
 @FeignClient(name = "bank", url = "http://banco.eu-west-3.elasticbeanstalk.com")
 public interface BancoFeignClient {
 
@@ -15,5 +19,5 @@ public interface BancoFeignClient {
 			@RequestParam("password") String password);
 
 	@PostMapping("/pasarela/validacion")
-	ResponseEntity<ValidarCompraResponse> validarCompra(@RequestHeader("Authorization") String token ,@RequestBody ValidarCompraRequest validarCompraRequest);
+	ResponseEntity<ValidarCompraResponse> validarCompra(@RequestHeader("Authorization") String token, @RequestBody CompraRequest validarCompraRequest);
 }
