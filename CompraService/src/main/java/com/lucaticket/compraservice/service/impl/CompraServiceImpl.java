@@ -13,11 +13,13 @@ import com.lucaticket.compraservice.model.ValidUser;
 import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
+import com.lucaticket.compraservice.model.dto.TicketRequest;
 import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
 import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
 import com.lucaticket.compraservice.service.CompraService;
 import com.lucaticket.feignclients.BancoFeignClient;
 import com.lucaticket.feignclients.EventFeignClient;
+import com.lucaticket.feignclients.TicketFeignClient;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,8 @@ public class CompraServiceImpl implements CompraService {
 	private final EventFeignClient eventFeign;
 	@Autowired
 	private final BancoFeignClient bancoFeign;
+	@Autowired
+	private final TicketFeignClient ticketFeign;
 
 	@Override
 	public ResponseEntity<CompraResponse> buy(CompraRequest compraRequest) {
@@ -40,9 +44,9 @@ public class CompraServiceImpl implements CompraService {
 
 		validatePurchase(compraRequest, detailedEventResponse, validarUserResponse);
 		
-//		ticket()
+		ticketFeign.save(new TicketRequest(compraRequest.getEmail(), compraRequest.getIdEvento()));
 
-		return ResponseEntity.ok(new CompraResponse(compraRequest.getOwnerName(), compraRequest.getEmail(),
+		return ResponseEntity.ok(new CompraResponse(compraRequest.getNombreTitular(), compraRequest.getEmail(),
 				compraRequest.getIdEvento(), detailedEventResponse.getBody().getName(), compraRequest.getCantidad(), LocalDateTime.now()));
 	}
 
