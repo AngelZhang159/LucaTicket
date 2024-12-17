@@ -16,7 +16,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
 //                return new BadRequestException("Bad Request: " + response.request().url());
             case 404:
                 return new EventoNotFoundException("El evento o el usuario no existen");
-            case 500:
+            case 500: 
                 return new CuentaNoRegistradaException("El usuario no existe en la base de datos");
             default:
                 return defaultDecoder.decode(methodKey, response);
