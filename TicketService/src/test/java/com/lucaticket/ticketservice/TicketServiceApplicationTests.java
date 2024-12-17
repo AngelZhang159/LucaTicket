@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.ticketservice.controller.TicketController;
 import com.lucaticket.ticketservice.model.Ticket;
+import com.lucaticket.ticketservice.model.dto.DetailedTicketResponse;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.repository.TicketRepository;
 
@@ -71,6 +72,26 @@ class TicketServiceApplicationTests {
   
 	}
 	
+	/**
+	 * @author Alberto de la Blanca
+	 * al listar por email y no haya tickets, devuelva un 204.
+	 * 
+	 **/
+	@Test
+    public void test_GetTicketsByMail_When_No_Tickets_Exist() {
+		//Limpiar bbdd
+		ticketRepository.deleteAll();
+		
+		// Llamar al método con un correo para el que no hay tickets
+        ResponseEntity<List<DetailedTicketResponse>> response = ticketController.getTickets("user@example.com");
+        
+     // Verificar que la respuesta tiene el código de estado 204 (No Content)
+        assertEquals(204, response.getStatusCode(), "Cuando no hay tickets, debería devolver 204 No Content.");
+        
+        //Verificar que el cuerpo esta vacio
+        assertEquals(null, response.getBody(), "El cuertpo de la respuesta debe ser null cuando no hay tickets");
+
+	}
 }
 
 
