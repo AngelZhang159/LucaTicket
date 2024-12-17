@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.lucaticket.ticketservice.model.dto.DetailedTicketResponse;
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
 
@@ -35,5 +36,5 @@ public interface TicketService {
 	 * @param email
 	 * @return ResponseEntity<DetailedTicketResponse>
 	 */
-	ResponseEntity<DetailedTicketResponse> getTickets(String email);
+	ResponseEntity<List<DetailedTicketResponse>> listTicketsByEmail(String email);
 }
