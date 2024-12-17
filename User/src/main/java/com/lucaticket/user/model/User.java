@@ -2,6 +2,7 @@ package com.lucaticket.user.model;
 
 import java.time.LocalDate;
 
+import com.lucaticket.user.model.dto.DeleteUserResponse;
 import com.lucaticket.user.model.dto.UpdateUserResponse;
 import com.lucaticket.user.model.dto.UserResponse;
 
@@ -50,6 +51,14 @@ public class User {
     	respuesta.setEmail(this.mail);
     	respuesta.setPassword(this.password);
     	
+    	return respuesta;
+    }
+    
+    public DeleteUserResponse toDeleteDto() {
+    	DeleteUserResponse respuesta = new DeleteUserResponse();
+    	
+    	respuesta.setFullName(this.name + " " + this.lastName);
+    	respuesta.setMail(this.mail);
     	return respuesta;
     }
 }
