@@ -39,7 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(NoTicketsFoundException.class)
 	public ResponseEntity<Object> handleNoTicketsFoundException(NoTicketsFoundException ex, WebRequest request) {
-		return buildResponseEntity(ex.getMessage(), HttpStatus.NO_CONTENT, "NO_TICKETS_FOUND", request);
+		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "NO_TICKETS_FOUND", request);
 	}
 
 	private ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status, String errorCode,
