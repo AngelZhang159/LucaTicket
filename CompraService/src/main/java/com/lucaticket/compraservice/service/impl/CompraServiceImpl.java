@@ -3,19 +3,20 @@ package com.lucaticket.compraservice.service.impl;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.lucaticket.compraservice.error.DatosCompraInvalidosException;
-import com.lucaticket.compraservice.error.DatosInvalidosException;
-import com.lucaticket.compraservice.error.EventoNotFoundException;
+import com.lucaticket.compraservice.error.exception.CuentaNoRegistradaException;
+import com.lucaticket.compraservice.error.exception.DatosCompraInvalidosException;
+import com.lucaticket.compraservice.error.exception.DatosInvalidosException;
+import com.lucaticket.compraservice.error.exception.EventoNotFoundException;
 import com.lucaticket.compraservice.model.ValidUser;
 import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
+import com.lucaticket.compraservice.model.dto.FallbackErrorResponse;
 import com.lucaticket.compraservice.model.dto.TicketRequest;
 import com.lucaticket.compraservice.model.dto.TicketResponse;
 import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
@@ -24,7 +25,9 @@ import com.lucaticket.compraservice.service.CompraService;
 import com.lucaticket.feignclients.BancoFeignClient;
 import com.lucaticket.feignclients.EventFeignClient;
 import com.lucaticket.feignclients.TicketFeignClient;
+import com.lucaticket.feignclients.UserFeignClient;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,11 +40,14 @@ public class CompraServiceImpl implements CompraService {
 	private final EventFeignClient eventFeign;
 	private final BancoFeignClient bancoFeign;
 	private final TicketFeignClient ticketFeign;
+	private final UserFeignClient userFeign;
 
 	@Override
+	@CircuitBreaker(name = "user", fallbackMethod = "fallbackGetEventDetails")
 	public ResponseEntity<CompraResponse> buy(CompraRequest compraRequest) {
-
+		
 		log.info("Nueva compra: " + compraRequest.toString());
+		comprobarCuenta(compraRequest.getEmail());
 		ResponseEntity<DetailedEventResponse> detailedEventResponse = eventExists(compraRequest);
 
 		ResponseEntity<ValidarUserResponse> validarUserResponse = validateUser();
@@ -64,6 +70,16 @@ public class CompraServiceImpl implements CompraService {
 			log.info("Error al guardar el ticket en la base de datos: " + ticketResponse.getBody());
 		}
 		log.info("Ticket guardado con éxito");
+	}
+	
+	
+	private void comprobarCuenta(String email) {
+		log.info("Comprobando si existe una cuenta registrada con el email" + email);
+		if(userFeign.getUser(email).getStatusCode() != HttpStatus.ACCEPTED) {
+			log.info("No existe cuenta con el email: " + email);
+			throw new CuentaNoRegistradaException("No existe cuenta con el email: [" + email 
+					+ "], por favor, regístrese para utilizar el servicio de compra");
+		}
 	}
 
 	private void validatePurchase(CompraRequest compraRequest,
@@ -117,6 +133,17 @@ public class CompraServiceImpl implements CompraService {
 						+ detailedEventResponse.getMinPrice());
 
 		return compraRequest;
+	}
+	
+	public ResponseEntity<FallbackErrorResponse> fallbackGetEventDetails(String email, Throwable throwable) {
+		log.error("Service: Fallback activado para tickets del email: " + email, throwable);
+
+		FallbackErrorResponse errorResponse = new FallbackErrorResponse(
+				HttpStatus.SERVICE_UNAVAILABLE.value(),
+				"Service Unavailable",
+				"El servicio event-service no está disponible. Se devolvió un resultado de fallback");
+
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
 	}
 
 }

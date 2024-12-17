@@ -1,4 +1,4 @@
-package com.lucaticket.compraservice.error;
+package com.lucaticket.compraservice.error.exception;
 
 public class EventoNotFoundException extends RuntimeException {
 

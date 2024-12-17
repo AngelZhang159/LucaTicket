@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
-import com.lucaticket.compraservice.error.InvalidDataException;
+import com.lucaticket.compraservice.error.exception.InvalidDataException;
 import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;

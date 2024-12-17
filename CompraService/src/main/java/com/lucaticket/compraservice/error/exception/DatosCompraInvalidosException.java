@@ -1,4 +1,4 @@
-package com.lucaticket.compraservice.error;
+package com.lucaticket.compraservice.error.exception;
 
 public class DatosCompraInvalidosException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
