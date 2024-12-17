@@ -58,10 +58,10 @@ public class TicketController {
 	 * @return una lista de objetos DetailedTicketResponse
 	 */
 	
-	@GetMapping("/mail/{mail}")
+	@GetMapping("/list/mail/{mail}")
 	public ResponseEntity<List<DetailedTicketResponse>> getTickets(@PathVariable String mail){
 		log.info("Controller: Obteniendo nuevo ticket para el correo: " + mail);
-		return ticketService.listTicketByMail(mail);
+		return ticketService.listTicketsByEmail(mail);
 	}
 
 }
