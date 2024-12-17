@@ -1,11 +1,15 @@
 package com.lucaticket.ticketservice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +19,19 @@ import com.lucaticket.ticketservice.model.Ticket;
 import com.lucaticket.ticketservice.model.dto.DetailedTicketResponse;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.repository.TicketRepository;
+import com.lucaticket.ticketservice.service.TicketService;
 
 @SpringBootTest
 class TicketServiceApplicationTests {
 	
-    @Autowired
+	@Autowired
     private TicketController ticketController;
-
-    @Autowired
+	
+    @Mock
     private TicketRepository ticketRepository;
+
+    @Mock
+    private TicketService ticketService;
 
 	@Test
 	void contextLoads() {
@@ -39,19 +47,17 @@ class TicketServiceApplicationTests {
 	
 	@Test
 	public void test_List_Ticket_Matches_Database_Size() {
-		// Limpiar la base de datos antes de iniciar la prueba
-        ticketRepository.deleteAll();
-		
-        // Crear y guardar tickets de prueba
-        Ticket ticket1 = new Ticket(null, "user1@example.com", 1L);
-        Ticket ticket2 = new Ticket(null, "user2@example.com", 2L);
-        ticketRepository.saveAll(Arrays.asList(ticket1, ticket2));
+        // Configurar el comportamiento del mock
+        when(ticketRepository.findAll()).thenReturn(List.of(
+            new Ticket(1L, "user1@example.com", 1L),
+            new Ticket(2L, "user2@example.com", 2L)
+        ));
 
         // Llamar al controlador para listar los tickets
         ResponseEntity<List<TicketResponse>> response = ticketController.listTickets();
 
-        // Verificar que el tamaño de la lista devuelta coincide con los elementos en la base de datos
-        assertEquals(2, response.getBody().size(), "El número de tickets devueltos debe coincidir con el de la base de datos.");
+        // Verificar que el tamaño de la lista devuelta coincide con los elementos en el mock
+        assertEquals(2, response.getBody().size(), "El número de tickets devueltos debe coincidir con el mock.");
     }
 	
 	/**
@@ -62,11 +68,15 @@ class TicketServiceApplicationTests {
 	@Test
 	public void test_ListTicket_When_No_Ticket_Exist() {
 		
-		ticketRepository.deleteAll();
-		ResponseEntity<List<TicketResponse>> response = ticketController.listTickets();
-		
-		// Verificar que la respuesta tiene el código de estado 204 (No Content)
+        // Configurar el mock para devolver una lista vacía
+        when(ticketRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Llamar al controlador
+        ResponseEntity<List<TicketResponse>> response = ticketController.listTickets();
+
+        // Verificar que la respuesta tiene el código de estado 204
         assertEquals(204, response.getStatusCode(), "Cuando no hay tickets, debería devolver 204 No Content.");
+
         // Verificar que el cuerpo de la respuesta está vacío
         assertEquals(null, response.getBody(), "El cuerpo de la respuesta debe ser null cuando no hay tickets.");
   
@@ -79,19 +89,41 @@ class TicketServiceApplicationTests {
 	 **/
 	@Test
     public void test_GetTicketsByMail_When_No_Tickets_Exist() {
-		//Limpiar bbdd
-		ticketRepository.deleteAll();
-		
-		// Llamar al método con un correo para el que no hay tickets
+        // Configurar el mock para devolver una lista vacía
+        when(ticketRepository.findByEmail(Mockito.anyString())).thenReturn(Collections.emptyList());
+
+        // Llamar al método con un correo para el que no hay tickets
         ResponseEntity<List<DetailedTicketResponse>> response = ticketController.getTickets("user@example.com");
-        
-     // Verificar que la respuesta tiene el código de estado 204 (No Content)
+
+        // Verificar que la respuesta tiene el código de estado 204
         assertEquals(204, response.getStatusCode(), "Cuando no hay tickets, debería devolver 204 No Content.");
-        
-        //Verificar que el cuerpo esta vacio
-        assertEquals(null, response.getBody(), "El cuertpo de la respuesta debe ser null cuando no hay tickets");
+
+        // Verificar que el cuerpo está vacío
+        assertEquals(null, response.getBody(), "El cuerpo de la respuesta debe ser null cuando no hay tickets.");
 
 	}
+	
+	/**
+	 * @author Alberto de la Blanca
+     * Verifica que el número de tickets listados coincide con el número de tickets
+     * en la base de datos para un correo dado.
+     */
+	
+	@Test
+	public void test_GetTicketsByMail_Matches_Satabase_Size() {
+        // Configurar el mock para devolver tickets específicos por email
+        when(ticketRepository.findByEmail("user1@example.com")).thenReturn(List.of(
+            new Ticket(1L, "user1@example.com", 1L),
+            new Ticket(3L, "user1@example.com", 3L)
+        ));
+
+        // Llamar al método con un correo específico
+        ResponseEntity<List<DetailedTicketResponse>> response = ticketController.getTickets("user1@example.com");
+
+        // Verificar que el tamaño de la lista coincide con los tickets asociados al correo
+        assertEquals(2, response.getBody().size(), "El número de tickets devueltos debe coincidir con el mock para el correo proporcionado.");
+    
+	}   
 }
 
 
