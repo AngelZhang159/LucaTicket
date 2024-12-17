@@ -3,6 +3,8 @@ package com.lucaticket.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -127,5 +129,17 @@ class UserApplicationTests {
 		when(userRepository.findById(any(String.class))).thenThrow(NoSuchElementException.class);
 		assertThrows(NoSuchElementException.class,
 				() -> userService.update("frederick@gmail.com", new UpdateUserRequest()), "NO_SUCH_ELEMENT");
+	}
+	
+	@Test
+	void should_actually_delete_from_database_when_delete_user() {
+		String idUsuario = "Frederick@gmail.com";
+		Optional<User> user = Optional.ofNullable(new User());
+		
+		when(userRepository.findById(idUsuario)).thenReturn(user);
+		
+		userService.delete(idUsuario);
+		
+		verify(userRepository, times(1)).deleteById(idUsuario);;
 	}
 }
