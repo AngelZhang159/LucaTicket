@@ -27,4 +27,13 @@ public interface TicketService {
 	 */
 
 	ResponseEntity<List<TicketResponse>> listTickets();
+
+	/**
+	 * Guarda un nuevo ticket
+	 * 
+	 * @author Yuji
+	 * @param email
+	 * @return ResponseEntity<DetailedTicketResponse>
+	 */
+	ResponseEntity<DetailedTicketResponse> getTickets(String email);
 }

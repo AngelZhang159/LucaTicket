@@ -14,6 +14,7 @@ import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.repository.TicketRepository;
 import com.lucaticket.ticketservice.service.TicketService;
 
+import feignclients.EventFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketServiceImpl implements TicketService {
 
 	private final TicketRepository ticketRepository;
+
+	private final EventFeignClient eventFeignClient;
 
 	/**
 	 * @author Angel
@@ -54,5 +57,21 @@ public class TicketServiceImpl implements TicketService {
 
 		log.info("Service: Devolviendo tickets, tamaño: " + tickets.size());
 		return ResponseEntity.ok(tickets.stream().map(Ticket::toDTO).toList());
+	}
+
+	/**
+	 * @author Angel
+	 * @return List<Ticket>
+	 * @throws NoTicketsFoundException
+	 */
+	public ResponseEntity<DetailedTicketResponse> listTicketsByEmail(String email) {
+		log.info("Service: Obteniendo tickets de: " + email);
+		List<DetailedTicketResponse> tickets = ticketRepository.findByEmail(email);
+		if (tickets.isEmpty()) {
+			throw new NoTicketsFoundException("No hay tickets registrados para el usuario: " + email);
+		}
+		
+		log.info("Service: Devolviendo tickets, tamaño: " + tickets.size());
+		return ResponseEntity.ok(tickets.stream().map(Ticket::toDetailedDTO).toList());
 	}
 }
