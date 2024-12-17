@@ -13,6 +13,8 @@ import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.service.UserService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,7 +34,7 @@ public class UserController {
 	public ResponseEntity<UserResponse> saveUser(@RequestBody @Valid UserRequest userRequest) {
 		return userService.saveUser(userRequest);
 	}
-	
+
 	/**
 	 * @author Angel
 	 * @param email
@@ -40,7 +42,8 @@ public class UserController {
 	 */
 
 	@GetMapping("/{email}")
-	public ResponseEntity<UserResponse> getUser(@PathVariable String email) {
+	public ResponseEntity<UserResponse> getUser(
+			@PathVariable @Email(message = "El email debe de tener un formato correcto") @NotBlank(message = "El email no puede estar vacio en /user/{email}") String email) {
 		return userService.getUser(email);
 	}
 

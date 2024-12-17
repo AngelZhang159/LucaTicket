@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.lucaticket.user.error.UserAlreadyExistsException;
+import com.lucaticket.user.error.UserNotFoundException;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.repository.UserRepository;
@@ -42,7 +43,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public ResponseEntity<UserResponse> getUser(String email) {
-		return new ResponseEntity<>(userRepository.findById(email).orElseThrow().toDto(), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(userRepository.findById(email)
+				.orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario con el email: " + email))
+				.toDto(), HttpStatus.ACCEPTED);
 	}
 
 }
