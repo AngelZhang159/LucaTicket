@@ -35,4 +35,14 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<>(userRepository.save(userRequest.toEntity()).toDto(), HttpStatus.CREATED);
 	}
 
+	/**
+	 * @author Raul
+	 * @param email del usuario que se quiere buscar
+	 * @return un usuario con ese email en caso de que exista
+	 */
+	@Override
+	public ResponseEntity<UserResponse> getUser(String email) {
+		return new ResponseEntity<>(userRepository.findById(email).orElseThrow().toDto(), HttpStatus.ACCEPTED);
+	}
+
 }

@@ -13,4 +13,11 @@ public interface UserService {
 	 * @return El usuario creado
 	 */
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest);
+	
+	/**
+	 * @author Raul
+	 * @param email del usuario que se quiere buscar
+	 * @return un usuario con ese email en caso de que exista
+	 */
+	public ResponseEntity<UserResponse> getUser(String email);
 }
