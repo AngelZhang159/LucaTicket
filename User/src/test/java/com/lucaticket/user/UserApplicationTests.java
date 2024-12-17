@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ class UserApplicationTests {
 	@Test
 	void should_throw_invalid_data_exception_when_wrong_request() {
 
-		when(userService.saveUser(any(UserRequest.class))).thenThrow(InvalidUserDataException.class);
+		when(userRepository.save(any(User.class))).thenThrow(InvalidUserDataException.class);
 
 		assertThrows(InvalidUserDataException.class, () -> userService.saveUser(new UserRequest()),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
@@ -84,5 +86,21 @@ class UserApplicationTests {
 		ResponseEntity<UserResponse> responseEntity = userService.saveUser(userRequest);
 
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+	}
+	
+	@Test
+	void should_return_status_404_when_user_does_not_exist() {
+		when(userRepository.findById(any(String.class))).thenThrow(NoSuchElementException.class);
+		assertThrows(NoSuchElementException.class, () -> userService.getUser("frederick@gmail.com"),
+				"NO_SUCH_ELEMENT");
+	}
+	
+	@Test
+	void should_return_status_200_when_user_exists() {
+		Optional<User> respuestaUsuario = Optional.ofNullable(new User("Frederick@gmail.com", "frede", "freder", "freDER718023@", null));
+		when(userRepository.findById(any(String.class))).thenReturn(respuestaUsuario);
+		ResponseEntity<UserResponse> respuesta = userService.getUser("Frederick@gmail.com");
+		
+		assertEquals(HttpStatus.ACCEPTED, respuesta.getStatusCode());
 	}
 }
