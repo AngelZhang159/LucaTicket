@@ -1,4 +1,4 @@
-package com.lucaticket.config;
+package com.lucaticket.event.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 				contact = @Contact(
 						name = "Grupo 2" 
 						),
-				description = "Documentación del projecto 3 [LucaTicket]",
 				title = "LucaTicket Spring",
+				description = "Documentación del projecto 3 [LucaTicket], microservicio de EVENTO",
 				version = "1.0"
 				),
 		servers = {
