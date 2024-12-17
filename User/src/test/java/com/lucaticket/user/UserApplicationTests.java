@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.user.error.InvalidUserDataException;
 import com.lucaticket.user.model.User;
+import com.lucaticket.user.model.dto.UpdateUserRequest;
+import com.lucaticket.user.model.dto.UpdateUserResponse;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.repository.UserRepository;
@@ -87,20 +89,40 @@ class UserApplicationTests {
 
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 	}
-	
+
 	@Test
 	void should_return_status_404_when_user_does_not_exist() {
 		when(userRepository.findById(any(String.class))).thenThrow(NoSuchElementException.class);
-		assertThrows(NoSuchElementException.class, () -> userService.getUser("frederick@gmail.com"),
-				"NO_SUCH_ELEMENT");
+		assertThrows(NoSuchElementException.class, () -> userService.getUser("frederick@gmail.com"), "NO_SUCH_ELEMENT");
 	}
-	
+
 	@Test
 	void should_return_status_200_when_user_exists() {
-		Optional<User> respuestaUsuario = Optional.ofNullable(new User("Frederick@gmail.com", "frede", "freder", "freDER718023@", null));
+		Optional<User> respuestaUsuario = Optional
+				.ofNullable(new User("Frederick@gmail.com", "frede", "freder", "freDER718023@", null));
 		when(userRepository.findById(any(String.class))).thenReturn(respuestaUsuario);
 		ResponseEntity<UserResponse> respuesta = userService.getUser("Frederick@gmail.com");
-		
+
 		assertEquals(HttpStatus.ACCEPTED, respuesta.getStatusCode());
+	}
+
+	@Test
+	void should_return_200_when_updating_user() {
+
+		User user = new User("example@example.com", "example", "example2", "1234", LocalDate.now());
+		when(userRepository.save(any(User.class))).thenReturn(user);
+		UpdateUserRequest request = new UpdateUserRequest(user.getMail(), user.getName() + " " + user.getLastName(),
+				user.getPassword());
+
+		ResponseEntity<UpdateUserResponse> responseEntity = userService.update("example@example.com", request);
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
+
+	@Test
+	void should_return_status_404_when_updating_user_does_not_exist() {
+		when(userRepository.findById(any(String.class))).thenThrow(NoSuchElementException.class);
+		assertThrows(NoSuchElementException.class, () -> userService.update("frederick@gmail.com", new User()),
+				"NO_SUCH_ELEMENT");
 	}
 }
