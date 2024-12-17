@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -59,6 +60,22 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 	}
 
 	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+			HttpStatusCode status, WebRequest request) {
+		List<String> messages = new ArrayList<>();
+		CustomErrorJson customError = new CustomErrorJson();
+
+		messages.add("Revisa el formato de los campos. El id debe ser un número");
+
+		customError.setStatus(status.value());
+		customError.setTimestamp(new Date());
+		customError.setError(status.toString());
+		customError.setMessage(messages);
+
+		return new ResponseEntity<>(customError, headers, status);
+	}
+
+	@Override
 	@Nullable
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -68,6 +85,7 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 		messages.add(ex.getLocalizedMessage());
 
+		customError.setStatus(status.value());
 		customError.setTimestamp(new Date());
 		customError.setError(status.toString());
 		customError.setMessage(messages);
