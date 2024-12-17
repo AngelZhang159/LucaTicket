@@ -2,6 +2,7 @@ package com.lucaticket.user.model;
 
 import java.time.LocalDate;
 
+import com.lucaticket.user.model.dto.UpdateUserResponse;
 import com.lucaticket.user.model.dto.UserResponse;
 
 import jakarta.persistence.Column;
@@ -40,5 +41,15 @@ public class User {
         userResponse.setSignupDate(this.signupDate);
 
         return userResponse;
+    }
+    
+    public UpdateUserResponse toUpdateDto() {
+    	UpdateUserResponse respuesta = new UpdateUserResponse();
+    	
+    	respuesta.setFullName(this.name + " " + this.lastName);
+    	respuesta.setEmail(this.mail);
+    	respuesta.setPassword(this.password);
+    	
+    	return respuesta;
     }
 }

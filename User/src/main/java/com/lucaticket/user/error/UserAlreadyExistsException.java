@@ -1,7 +1,12 @@
 package com.lucaticket.user.error;
 
 public class UserAlreadyExistsException extends RuntimeException {
-    public UserAlreadyExistsException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UserAlreadyExistsException(String message) {
         super(message);
     }
 }

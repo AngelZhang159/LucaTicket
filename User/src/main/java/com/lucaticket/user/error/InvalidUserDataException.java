@@ -1,7 +1,12 @@
 package com.lucaticket.user.error;
 
 public class InvalidUserDataException extends RuntimeException {
-    public InvalidUserDataException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public InvalidUserDataException(String message) {
         super(message);
     }
 }

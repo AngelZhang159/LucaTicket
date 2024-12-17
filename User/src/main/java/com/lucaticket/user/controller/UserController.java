@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lucaticket.user.model.dto.DeleteUserResponse;
 import com.lucaticket.user.model.dto.UpdateUserRequest;
+import com.lucaticket.user.model.dto.UpdateUserResponse;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.service.UserService;
@@ -58,10 +59,9 @@ public class UserController {
 	 * @return usuario actualizado
 	 */
 
-	@PutMapping("update/{email}")
-	public ResponseEntity<UserResponse> update(@PathVariable @Email @NotBlank String email,
-			@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-		return userService.update(email, updateUserRequest);
+	@PutMapping("update")
+	public ResponseEntity<UpdateUserResponse> update(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+		return userService.update(updateUserRequest.getEmail(), updateUserRequest);
 	}
 
 	/**
