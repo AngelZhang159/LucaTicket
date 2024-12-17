@@ -21,8 +21,8 @@ public interface TicketService {
 	ResponseEntity<TicketResponse> save(TicketRequest ticketRequest);
 
 	/**
-	 * @author Alberto de la Blanca Recupera una lista de todos los tickets
-	 *         disponibles en el sistema.
+	 * @author Alberto de la Blanca 
+	 * Recupera una lista de todos los tickets disponibles en el sistema.
 	 * 
 	 * @return ResponseEntity que contiene una lista de tickets.
 	 */
