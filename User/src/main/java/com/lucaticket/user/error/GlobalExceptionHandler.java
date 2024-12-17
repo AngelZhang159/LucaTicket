@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,6 +31,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidUserDataException.class)
     public ResponseEntity<Object> handleInvalidUserDataException(InvalidUserDataException ex, WebRequest request) {
+        return buildResponseEntity(
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                "INVALID_USER_DATA",
+                request);
+    }
+    
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Object> handleInvalidUserDataException(NoSuchElementException ex, WebRequest request) {
         return buildResponseEntity(
                 ex.getMessage(),
                 HttpStatus.BAD_REQUEST,
