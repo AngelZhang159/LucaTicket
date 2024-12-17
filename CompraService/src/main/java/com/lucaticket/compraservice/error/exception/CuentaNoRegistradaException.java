@@ -1,11 +1,7 @@
-package com.lucaticket.compraservice.error;
+package com.lucaticket.compraservice.error.exception;
 
-/**
- * Excepción personalizada para indicar que los datos proporcionados son inválidos.
- */
-public class InvalidDataException extends RuntimeException {
-
-    /**
+public class CuentaNoRegistradaException extends RuntimeException {
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -15,7 +11,7 @@ public class InvalidDataException extends RuntimeException {
      *
      * @param message El mensaje detallado de la excepción.
      */
-    public InvalidDataException(String message) {
+    public CuentaNoRegistradaException(String message) {
         super(message);
     }
 
@@ -25,7 +21,7 @@ public class InvalidDataException extends RuntimeException {
      * @param message El mensaje detallado de la excepción.
      * @param cause   La causa original de la excepción.
      */
-    public InvalidDataException(String message, Throwable cause) {
+    public CuentaNoRegistradaException(String message, Throwable cause) {
         super(message, cause);
     }
 }
