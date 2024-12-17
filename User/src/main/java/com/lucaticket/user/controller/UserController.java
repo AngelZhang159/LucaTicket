@@ -1,6 +1,7 @@
 package com.lucaticket.user.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,10 +50,28 @@ public class UserController {
 		return userService.getUser(email);
 	}
 
+	/**
+	 * @author Angel
+	 * @param email
+	 * @param updateUserRequest
+	 * @return usuario actualizado
+	 */
+
 	@PutMapping("update/{email}")
-	public ResponseEntity<UserResponse> putMethodName(@PathVariable @Email @NotBlank String email,
+	public ResponseEntity<UserResponse> update(@PathVariable @Email @NotBlank String email,
 			@RequestBody @Valid UpdateUserRequest updateUserRequest) {
 		return userService.update(email, updateUserRequest);
+	}
+
+	/**
+	 * @author Angel
+	 * @param email
+	 * @return usuario borrado
+	 */
+
+	@DeleteMapping("delete/{email}")
+	public ResponseEntity<UserResponse> delete(@PathVariable @Email @NotBlank String email) {
+		return userService.delete(email);
 	}
 
 }
