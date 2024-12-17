@@ -73,9 +73,8 @@ public class TicketServiceImpl implements TicketService {
 
         // Recuperar los tickets asociados al email
         List<Ticket> tickets = ticketRepository.findByEmail(email);
-        if (tickets.isEmpty()) {
-            throw new NoTicketsFoundException("No hay tickets registrados para el usuario: " + email);
-        }
+        if (tickets.isEmpty()) throw new NoTicketsFoundException("No hay tickets registrados para el usuario: " + email);
+
 
         // Usando Feign client para obtener los detalles del evento
         List<DetailedTicketResponse> detailedTickets = tickets.stream().map(ticket -> {
