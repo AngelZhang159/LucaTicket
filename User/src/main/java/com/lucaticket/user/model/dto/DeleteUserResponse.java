@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeleteUserResponse {
 
+	private final String mensaje = "El usuario ha sido borrado correctamente";
 	private String fullName;
 	private String mail;
 

@@ -3,6 +3,7 @@ package com.lucaticket.user.service;
 import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.user.model.dto.UpdateUserResponse;
+import com.lucaticket.user.model.dto.DeleteUserResponse;
 import com.lucaticket.user.model.dto.UpdateUserRequest;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
@@ -30,4 +31,6 @@ public interface UserService {
 	 * @return el usuario actualizado en caso de que exista
 	 */
 	public ResponseEntity<UpdateUserResponse> update(String email, UpdateUserRequest updateUserRequest);
+	
+	public ResponseEntity<DeleteUserResponse> delete(String email);
 }
