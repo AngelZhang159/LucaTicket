@@ -31,7 +31,6 @@ public class EventDTO {
     /** 
      * Identificador único del evento. 
      */
-    @Positive(message = "El ID del evento debe ser un número positivo.")
     private long id;
 
     /** 
