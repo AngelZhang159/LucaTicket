@@ -111,18 +111,21 @@ class UserApplicationTests {
 
 		User user = new User("example@example.com", "example", "example2", "1234", LocalDate.now());
 		when(userRepository.save(any(User.class))).thenReturn(user);
-		UpdateUserRequest request = new UpdateUserRequest(user.getMail(), user.getName() + " " + user.getLastName(),
-				user.getPassword());
+		when(userRepository.findById(any(String.class))).thenReturn(Optional.of(user));
+		
+		
+		UpdateUserRequest request = new UpdateUserRequest(user.getMail(), user.getName(), user.getLastName(),
+				user.getPassword(), user.getPassword());
 
 		ResponseEntity<UpdateUserResponse> responseEntity = userService.update("example@example.com", request);
 
-		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
 	}
 
 	@Test
 	void should_return_status_404_when_updating_user_does_not_exist() {
 		when(userRepository.findById(any(String.class))).thenThrow(NoSuchElementException.class);
-		assertThrows(NoSuchElementException.class, () -> userService.update("frederick@gmail.com", new User()),
-				"NO_SUCH_ELEMENT");
+		assertThrows(NoSuchElementException.class,
+				() -> userService.update("frederick@gmail.com", new UpdateUserRequest()), "NO_SUCH_ELEMENT");
 	}
 }
