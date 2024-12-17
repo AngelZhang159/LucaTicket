@@ -1,6 +1,5 @@
 package com.lucaticket.user.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateUserRequest {
 
-	private String name;
-	private String lastName;
-	@NotBlank(message = "Debes de introducir la contraseña de la cuenta para poder hacer un cambio.")
+	private final String mensaje = "El usuario ha sido actualizado correctamente *** MOSTRAMOS LA CONTRASEÑA PARA QUE SE VEA QUE HA CAMBIADO ***";
+	private String email;
+	private String fullName;
 	private String password;
-	private String newPassword;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucaticket.user.model.dto.DeleteUserResponse;
 import com.lucaticket.user.model.dto.UpdateUserRequest;
 import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
@@ -70,7 +71,7 @@ public class UserController {
 	 */
 
 	@DeleteMapping("delete/{email}")
-	public ResponseEntity<UserResponse> delete(@PathVariable @Email @NotBlank String email) {
+	public ResponseEntity<DeleteUserResponse> delete(@PathVariable @Email @NotBlank String email) {
 		return userService.delete(email);
 	}
 
