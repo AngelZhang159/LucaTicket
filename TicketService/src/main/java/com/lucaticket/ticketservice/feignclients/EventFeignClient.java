@@ -1,4 +1,4 @@
-package com.lucaticket.feignclients;
+package com.lucaticket.ticketservice.feignclients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

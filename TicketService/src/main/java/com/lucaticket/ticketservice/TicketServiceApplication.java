@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.lucaticket.feignclients")
+@EnableFeignClients
 public class TicketServiceApplication {
 	
 	/**

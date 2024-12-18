@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.lucaticket.event.model.dto.DetailedEventResponse;
-import com.lucaticket.feignclients.EventFeignClient;
 import com.lucaticket.ticketservice.error.FallbackErrorResponse;
 import com.lucaticket.ticketservice.error.exception.NoTicketsFoundException;
 import com.lucaticket.ticketservice.error.exception.TicketAlreadyExistsException;
+import com.lucaticket.ticketservice.feignclients.EventFeignClient;
 import com.lucaticket.ticketservice.model.Ticket;
 import com.lucaticket.ticketservice.model.dto.DetailedTicketResponse;
 import com.lucaticket.ticketservice.model.dto.TicketRequest;
