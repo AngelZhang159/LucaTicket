@@ -21,9 +21,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * @since 11-12-2024
+ * @version 4.0
+ * Clase que maneja las excepciones de la aplicación de forma personalizada.
+ * Esta clase extiende de {@link ResponseEntityExceptionHandler} para gestionar 
+ * las excepciones de manera centralizada y personalizada en un controlador global.
+ * 
+ * Las excepciones manejadas incluyen datos inválidos, argumentos no válidos, errores de tipo 
+ * y errores en los mensajes HTTP, entre otros.
+ */
 @RestControllerAdvice
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
+	 /**
+     * Maneja excepciones de tipo {@link InvalidDataException}. Cuando se detecta una excepción de este tipo,
+     * responde con un código de estado HTTP 400 (Bad Request).
+     * 
+     * @param response el objeto HttpServletResponse para enviar la respuesta
+     * @throws IOException si ocurre un error al enviar la respuesta
+     */
 	@ExceptionHandler(InvalidDataException.class)
 	public void springHandleNotFound(HttpServletResponse response) throws IOException {
 		logger.info("------ DATOS INVALIDOS");
@@ -35,6 +52,17 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 		logger.info("------ DATOS INVALIDOS");
 		response.sendError(HttpStatus.NOT_FOUND.value());
 	}
+
+	/**
+     * Maneja excepciones de tipo {@link MethodArgumentNotValidException}, que ocurren cuando los argumentos 
+     * del método no cumplen con las validaciones definidas en el controlador.
+     * 
+     * @param ex la excepción que contiene los errores de validación
+     * @param headers los encabezados HTTP
+     * @param status el estado HTTP de la respuesta
+     * @param request la solicitud Web asociada a la excepción
+     * @return una respuesta {@link ResponseEntity} con los detalles del error
+     */
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -81,6 +109,16 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(customError, headers, status);
 	}
 
+	/**
+     * Maneja excepciones de tipo {@link TypeMismatchException}, que ocurren cuando hay un desajuste de tipo 
+     * en los parámetros de la solicitud.
+     * 
+     * @param ex la excepción que contiene el error de tipo
+     * @param headers los encabezados HTTP
+     * @param status el estado HTTP de la respuesta
+     * @param request la solicitud Web asociada a la excepción
+     * @return una respuesta {@link ResponseEntity} con los detalles del error
+     */
 	@Override
 	@Nullable
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,

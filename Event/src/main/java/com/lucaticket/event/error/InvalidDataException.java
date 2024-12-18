@@ -1,6 +1,8 @@
 package com.lucaticket.event.error;
 
 /**
+ * @version 1.0
+ * @since 16-12-2024
  * Excepción personalizada para indicar que los datos proporcionados son inválidos.
  */
 public class InvalidDataException extends RuntimeException {
