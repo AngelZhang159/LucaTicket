@@ -12,7 +12,9 @@ import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.service.CompraService;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 public class CompraController {
 

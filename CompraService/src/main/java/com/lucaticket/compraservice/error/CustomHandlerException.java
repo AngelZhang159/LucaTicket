@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.lucaticket.compraservice.error.exception.BancoNoDisponibleException;
 import com.lucaticket.compraservice.error.exception.CuentaNoRegistradaException;
 import com.lucaticket.compraservice.error.exception.DatosCompraInvalidosException;
+import com.lucaticket.compraservice.error.exception.EventoNotFoundException;
 import com.lucaticket.compraservice.error.exception.InvalidDataException;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,6 +51,16 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(CuentaNoRegistradaException.class) 
 	public ResponseEntity<Object> handleCuentaNoRegistradaException(CuentaNoRegistradaException ex, WebRequest request) {
 		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "CUENTA_NO_REGISTRADA", request);
+	}
+	
+	@ExceptionHandler(EventoNotFoundException.class) 
+	public ResponseEntity<Object> handleEventoNotFoundException(EventoNotFoundException ex, WebRequest request) {
+		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "EVENTO_NO_EXISTE", request);
+	}
+	
+	@ExceptionHandler(BancoNoDisponibleException.class) 
+	public ResponseEntity<Object> handleBancoNoDisponibleException(BancoNoDisponibleException ex, WebRequest request) {
+		return buildResponseEntity(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE, "SERVIDOR_NO_DISPONIBLE", request);
 	}
 
 	@Override

@@ -17,6 +17,6 @@ public class CompraResponse {
 	private Long idEvento;
 	private String nombreEvento;
 	private Double price;
-	private LocalDateTime fechaEvento;
+	private String fechaEvento;
 	
 }

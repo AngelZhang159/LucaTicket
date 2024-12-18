@@ -43,7 +43,6 @@ public class CompraServiceImpl implements CompraService {
 	private final UserFeignClient userFeign;
 
 	@Override
-	@CircuitBreaker(name = "user", fallbackMethod = "fallbackGetEventDetails")
 	public ResponseEntity<CompraResponse> buy(CompraRequest compraRequest) {
 		
 		log.info("Nueva compra: " + compraRequest.toString());
@@ -58,7 +57,7 @@ public class CompraServiceImpl implements CompraService {
 
 		return ResponseEntity.ok(new CompraResponse(compraRequest.getNombreTitular(), compraRequest.getEmail(),
 				compraRequest.getIdEvento(), detailedEventResponse.getBody().getName(), compraRequest.getCantidad(),
-				LocalDateTime.now()));
+				detailedEventResponse.getBody().getEventDate()));
 	}
 
 	private void saveTicket(CompraRequest compraRequest) {
@@ -71,7 +70,6 @@ public class CompraServiceImpl implements CompraService {
 		}
 		log.info("Ticket guardado con éxito");
 	}
-	
 	
 	private void comprobarCuenta(String email) {
 		log.info("Comprobando si existe una cuenta registrada con el email" + email);
@@ -134,16 +132,4 @@ public class CompraServiceImpl implements CompraService {
 
 		return compraRequest;
 	}
-	
-	public ResponseEntity<FallbackErrorResponse> fallbackGetEventDetails(String email, Throwable throwable) {
-		log.error("Service: Fallback activado para tickets del email: " + email, throwable);
-
-		FallbackErrorResponse errorResponse = new FallbackErrorResponse(
-				HttpStatus.SERVICE_UNAVAILABLE.value(),
-				"Service Unavailable",
-				"El servicio event-service no está disponible. Se devolvió un resultado de fallback");
-
-		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
-	}
-
 }

@@ -30,7 +30,7 @@ public class DetailedEventResponse {
     private String description;
 
     /** Fecha y hora en la que se llevará a cabo el evento. */
-    private LocalDateTime eventDate;
+    private String eventDate;
 
     /** Precio mínimo de entrada para el evento. */
     private double minPrice;
