@@ -20,6 +20,14 @@ import com.lucaticket.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implementación del servicio {@link UserService}.
+ * Proporciona la lógica de negocio para la gestión de usuarios.
+ * 
+ * @author Angel
+ * @version 2.0
+ * @since 11-12-2024
+ */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -27,26 +35,31 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	/**
-	 * Guarda un nuevo usuario
+	 * Guarda un nuevo usuario en la base de datos.
 	 * 
 	 * @author Angel
-	 * @param UserRequest
-	 * @return UserResponse
+	 * @param userRequest Datos del usuario a registrar.
+	 * @return {@code UserResponse} con los datos del usuario creado.
+	 * @throws UserAlreadyExistsException si el email ya está registrado.
+	 * @since 18-12-2024
 	 */
 	@Override
 	public ResponseEntity<UserResponse> saveUser(UserRequest userRequest) {
-		// @Olivord
 		if (userRepository.findById(userRequest.getMail()).isPresent()) {
-			throw new UserAlreadyExistsException("El email ya está registrado " + userRequest.getMail());
+			throw new UserAlreadyExistsException("El email ya está registrado: " + userRequest.getMail());
 		}
 
 		return new ResponseEntity<>(userRepository.save(userRequest.toEntity()).toDto(), HttpStatus.CREATED);
 	}
 
 	/**
+	 * Obtiene los datos de un usuario por su email.
+	 * 
 	 * @author Raul
-	 * @param email del usuario que se quiere buscar
-	 * @return un usuario con ese email en caso de que exista
+	 * @param email Email del usuario a buscar.
+	 * @return {@code UserResponse} con los datos del usuario.
+	 * @throws UserNotFoundException si no se encuentra el usuario.
+	 * @since 18-12-2024
 	 */
 	@Override
 	public ResponseEntity<UserResponse> getUser(String email) {
@@ -55,45 +68,80 @@ public class UserServiceImpl implements UserService {
 				.toDto(), HttpStatus.ACCEPTED);
 	}
 
+	/**
+	 * Actualiza los datos de un usuario.
+	 * 
+	 * @author Angel
+	 * @param email             Email del usuario a actualizar.
+	 * @param updateUserRequest Datos nuevos para el usuario.
+	 * @return {@code UpdateUserResponse} con los datos actualizados.
+	 * @throws InvalidUserDataException si la contraseña actual es incorrecta.
+	 * @since 18-12-2024
+	 */
 	@Override
 	public ResponseEntity<UpdateUserResponse> update(String email, UpdateUserRequest updateUserRequest) {
-		comprobadorContrasenia(email, updateUserRequest);
-		User userOld = userRepository.findById(email).get();
+		comprobarContrasenia(email, updateUserRequest);
 
-		if (updateUserRequest.getName() != null && !(updateUserRequest.getName().equals(userOld.getName()))
-				&& !updateUserRequest.getName().isBlank() && !(updateUserRequest.getName().length() > 10)) {
+		User userOld = userRepository.findById(email).orElseThrow(
+				() -> new UserNotFoundException("No se ha encontrado el usuario con el email: " + email));
+
+		if (updateUserRequest.getName() != null && !updateUserRequest.getName().isBlank()
+				&& !updateUserRequest.getName().equals(userOld.getName())
+				&& updateUserRequest.getName().length() <= 10) {
 			userOld.setName(updateUserRequest.getName());
 		}
-		if (updateUserRequest.getLastName() != null && !(updateUserRequest.getLastName().equals(userOld.getLastName()))
-				&& !updateUserRequest.getLastName().isBlank() && !(updateUserRequest.getLastName().length() > 10)) {
+
+		if (updateUserRequest.getLastName() != null && !updateUserRequest.getLastName().isBlank()
+				&& !updateUserRequest.getLastName().equals(userOld.getLastName())
+				&& updateUserRequest.getLastName().length() <= 10) {
 			userOld.setLastName(updateUserRequest.getLastName());
 		}
-		if (updateUserRequest.getNewPassword() != null
-				&& !(updateUserRequest.getNewPassword().equals(userOld.getPassword()))
-				&& !updateUserRequest.getNewPassword().isBlank()) {
+
+		if (updateUserRequest.getNewPassword() != null && !updateUserRequest.getNewPassword().isBlank()
+				&& !updateUserRequest.getNewPassword().equals(userOld.getPassword())) {
 			userOld.setPassword(updateUserRequest.getNewPassword());
 		}
 
 		return new ResponseEntity<>(userRepository.save(userOld).toUpdateDto(), HttpStatus.ACCEPTED);
 	}
 
-	private void comprobadorContrasenia(String email, UpdateUserRequest updateUserRequest) {
-		if (updateUserRequest.getPassword()
-				.equals(userRepository.findById(email).orElseThrow(
-						() -> new UserNotFoundException("No se ha encontrado el usuario con el email: " + email))
-						.getPassword())) {
-		} else {
-			throw new InvalidUserDataException("La contraseña es incorrecta");
+	/**
+	 * Verifica que la contraseña actual sea válida.
+	 * 
+	 * @author Raul
+	 * @param email             Email del usuario.
+	 * @param updateUserRequest Solicitud de actualización de datos.
+	 * @throws InvalidUserDataException si la contraseña actual es incorrecta.
+	 * @since 18-12-2024
+	 */
+	private void comprobarContrasenia(String email, UpdateUserRequest updateUserRequest) {
+		String actualPassword = userRepository.findById(email)
+				.orElseThrow(() -> new UserNotFoundException("No se ha encontrado el usuario con el email: " + email))
+				.getPassword();
+
+		if (!updateUserRequest.getPassword().equals(actualPassword)) {
+			throw new InvalidUserDataException("La contraseña es incorrecta.");
 		}
 	}
 
+	/**
+	 * Elimina un usuario de la base de datos.
+	 * 
+	 * @author Raul
+	 * @param email Email del usuario a eliminar.
+	 * @return {@code DeleteUserResponse} con los datos del usuario eliminado.
+	 * @throws UserNotFoundException si no se encuentra el usuario.
+	 * @since 18-12-2024
+	 */
 	@Override
 	public ResponseEntity<DeleteUserResponse> delete(String email) {
 		DeleteUserResponse respuesta = userRepository.findById(email)
-				.orElseThrow(() -> new UserNotFoundException("El email proporcionado no coincide con ningun usuario en la base de datos"))
+				.orElseThrow(() -> new UserNotFoundException(
+						"El email proporcionado no coincide con ningún usuario en la base de datos."))
 				.toDeleteDto();
+
 		userRepository.deleteById(email);
+
 		return new ResponseEntity<>(respuesta, HttpStatus.ACCEPTED);
 	}
-
 }
