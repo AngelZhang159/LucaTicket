@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Angel, Raul
+ * **/
 // CLASE SIMILAR A LA DE ERRORES PERO CON CAMBIOS EN FECHA Y CAMPO AÑADIDO
 public class CustomErrorJson {
 
@@ -117,6 +120,11 @@ public class CustomErrorJson {
 				+ trace + ", message=" + message + ", path=" + path + ", jdk=" + jdk + "]";
 	}
 
+	/**
+	 * @author Angel
+	 * Change date and time format to spanish format.
+	 * "dd/MM/yyyy HH:mm:ss"
+	 */
 	private String changeTimeStamp(Date d) {
 		// Formato España
 		final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

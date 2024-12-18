@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 
+/**
+ * @Author Yuji
+ * **/
+
 @FeignClient(name = "event")
 public interface EventFeignClient {
 

@@ -2,7 +2,9 @@ package com.lucaticket.ticketservice.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+/**
+ *@author Raul 
+ **/
 @Data
 @AllArgsConstructor
 public class FallbackErrorResponse {

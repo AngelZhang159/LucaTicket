@@ -25,27 +25,65 @@ import com.lucaticket.ticketservice.error.exception.NoTicketsFoundException;
 import com.lucaticket.ticketservice.error.exception.TicketAlreadyExistsException;
 import com.lucaticket.ticketservice.error.exception.TicketNotFoundException;
 
+/**
+ * @author Alberto de la Blanca, Raul, Yuji, Angel
+ * GlobalExceptionHandler se encarga de manejar excepciones en toda la aplicación.
+ * 
+ * Proporciona un manejo centralizado de excepciones para escenarios específicos como errores de validación,
+ * excepciones personalizadas y errores generales, asegurando respuestas consistentes.
+ * **/
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+	
+	/**
+     * Maneja TicketNotFoundException.
+     *
+     * @param ex la excepción lanzada cuando un ticket no es encontrado.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
+	
 	@ExceptionHandler(TicketNotFoundException.class)
 	public ResponseEntity<Object> handleTicketNotFoundException(TicketNotFoundException ex, WebRequest request) {
 		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "TICKET_NOT_FOUND", request);
 	}
-
+	
+	/**
+     * Maneja TicketAlreadyExistsException.
+     *
+     * @param ex la excepción lanzada cuando un ticket ya existe.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
 	@ExceptionHandler(TicketAlreadyExistsException.class)
 	public ResponseEntity<Object> handleTicketAlreadyExistsException(TicketAlreadyExistsException ex,
 			WebRequest request) {
 		return buildResponseEntity(ex.getMessage(), HttpStatus.CONFLICT, "TICKET_ALREADY_EXISTS", request);
 	}
 
+	/**
+     * Maneja NoTicketsFoundException.
+     *
+     * @param ex la excepción lanzada cuando no se encuentran tickets.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
 	@ExceptionHandler(NoTicketsFoundException.class)
 	public ResponseEntity<Object> handleNoTicketsFoundException(NoTicketsFoundException ex, WebRequest request) {
 		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "NO_TICKETS_FOUND", request);
 	}
 
+	/**
+     * Construye un ResponseEntity con una estructura de error estandarizada.
+     *
+     * @param message el mensaje de error.
+     * @param status el código de estado HTTP.
+     * @param errorCode un código de error personalizado.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
 	private ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status, String errorCode,
 			WebRequest request) {
 		Map<String, Object> body = new HashMap<>();
@@ -58,6 +96,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(body, status);
 	}
 
+	 /**
+     * Maneja errores de validación para argumentos de métodos.
+     *
+     * @param ex la excepción lanzada cuando falla la validación.
+     * @param headers los encabezados HTTP.
+     * @param status el código de estado HTTP.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -87,6 +134,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	}
 
+	/**
+     * Maneja errores relacionados con mensajes HTTP no legibles.
+     *
+     * @param ex la excepción lanzada cuando un mensaje no puede ser leído.
+     * @param headers los encabezados HTTP.
+     * @param status el código de estado HTTP.
+     * @param request la solicitud web durante la cual ocurrió la excepción.
+     * @return un ResponseEntity con los detalles del error.
+     */
 	@Override
 	@Nullable
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
