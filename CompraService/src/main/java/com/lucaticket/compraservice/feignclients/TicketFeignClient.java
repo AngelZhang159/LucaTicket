@@ -1,4 +1,4 @@
-package com.lucaticket.feignclients;
+package com.lucaticket.compraservice.feignclients;
 
 import java.util.List;
 

@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import com.lucaticket.compraservice.error.exception.InvalidDataException;
+import com.lucaticket.compraservice.feignclients.BancoFeignClient;
+import com.lucaticket.compraservice.feignclients.EventFeignClient;
 import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.CompraResponse;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
@@ -20,8 +22,6 @@ import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
 import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
 import com.lucaticket.compraservice.repository.CompraRepository;
 import com.lucaticket.compraservice.service.impl.CompraServiceImpl;
-import com.lucaticket.feignclients.BancoFeignClient;
-import com.lucaticket.feignclients.EventFeignClient;
 
 @SpringBootTest
 class CompraServiceApplicationTests {

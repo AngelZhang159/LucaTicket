@@ -1,4 +1,4 @@
-package com.lucaticket.feignclients;
+package com.lucaticket.compraservice.feignclients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
