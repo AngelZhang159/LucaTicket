@@ -1,5 +1,12 @@
 package com.lucaticket.event.error;
 
+/**
+ * @since 12-12-2024
+ * @version 1.0
+ * Esta clase representa los detalles de un error en la aplicación. Se utiliza para almacenar
+ * información relevante sobre el error, como el código de estado HTTP, el mensaje de error
+ * y detalles adicionales que pueden ser útiles para el diagnóstico.
+ */
  class ErrorDetails {
     private int statusCode;
     private String message;

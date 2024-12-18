@@ -41,6 +41,12 @@ import com.lucaticket.event.model.enums.Genre;
 import com.lucaticket.event.repository.EventRepository;
 import com.lucaticket.event.service.impl.EventServiceImpl;
 
+/**
+ * clase para los tests
+ * @since 11-12-2024
+ * @version 17.0
+ **/
+
 @SpringBootTest
 class EventApplicationTests {
 	// <-- Atributos -->

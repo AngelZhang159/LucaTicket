@@ -11,6 +11,11 @@ import com.lucaticket.event.model.dto.EventCreateDelete;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 
+/**
+ * @version 7.0
+ * @since 11-12-2024
+ * @author Raul
+ */
 public interface EventService {
 
 	/**

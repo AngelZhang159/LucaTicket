@@ -23,7 +23,10 @@ import com.lucaticket.event.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+/*
+ * @since 11-12-2024
+ * @version 6.0
+ */
 @RestController
 @Slf4j
 @RequestMapping("/event")

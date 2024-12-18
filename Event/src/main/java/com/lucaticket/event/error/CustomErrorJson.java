@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @since 13-12-2024
+ * @version 1.0
+ * Esta clase representa una respuesta de error personalizada en formato JSON. Es similar a una respuesta de error estándar,
+ * pero con modificaciones para manejar un formato de timestamp personalizado y un campo adicional para la versión del JDK.
+ */
+
 // CLASE SIMILAR A LA DE ERRORES PERO CON CAMBIOS EN FECHA Y CAMPO AÑADIDO
 public class CustomErrorJson {
 
