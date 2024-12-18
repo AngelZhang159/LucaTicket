@@ -15,7 +15,7 @@ import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
 /**
  * @author Angel
  */
-@FeignClient(name = "bank", url = "http://banco.eu-west-3.elasticbeanstalk.com", configuration = FeignConfig.class)
+@FeignClient(name = "bank", url = "${bank.url}", configuration = FeignConfig.class)
 public interface BancoFeignClient {
 
 	@PostMapping("/pasarela/validaruser")
