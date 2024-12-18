@@ -36,8 +36,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
-		return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND, "USER_NOT_FOUND", request);
-	}
+		return buildResponseEntity("El usuario no existe en la base de datos", HttpStatus.NOT_FOUND, "USER_NOT_FOUND", request);
+	} 
 	
 	@ExceptionHandler(InvalidUserDataException.class) 
 	public ResponseEntity<Object> handleInvalidUserDataException(InvalidUserDataException ex, WebRequest request) {
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 		customError.setTimestamp(new Date());
 		customError.setStatus(status.value());
-		customError.setError(status.toString());
+		customError.setError(status.toString()); 
 
 		// Get all errors indicando el campo en el que falla
 		List<String> messages = new ArrayList<String>();

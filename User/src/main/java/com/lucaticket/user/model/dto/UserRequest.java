@@ -35,6 +35,7 @@ public class UserRequest {
      */
     @NotBlank(message = "El nombre no puede estar vacío.")
     @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres.")
+    @Pattern(regexp = "^[a-zA-ZñÑ]+$", message = "El nombre solo puede contener caracteres entre la a y la Z")
     private String name;
 
     /**
@@ -43,6 +44,7 @@ public class UserRequest {
      */
     @NotBlank(message = "El apellido no puede estar vacío.")
     @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres.")
+    @Pattern(regexp = "^[a-zA-ZñÑ]+$", message = "El apellido solo puede contener caracteres entre la a y la Z")
     private String lastName;
 
     /**
