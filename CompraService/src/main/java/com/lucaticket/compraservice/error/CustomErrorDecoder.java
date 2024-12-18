@@ -18,10 +18,17 @@ import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Raul
+ */
 @Slf4j
 public class CustomErrorDecoder implements ErrorDecoder {
 	private final ErrorDecoder defaultDecoder = new Default();
 
+	/**
+	 * @author Raul
+	 * 'intercepta' los codigos de error lanzados por el feign y devuelve una excepcion a medida
+	 */
     @Override
     public Exception decode(String methodKey, Response response) {
     	log.error(response.body().toString() + " | == | " + methodKey);
@@ -62,6 +69,12 @@ public class CustomErrorDecoder implements ErrorDecoder {
         }
     }
     
+    /**
+     * 
+     * @param body un cuerpo a decodificar
+     * @return 
+     * @throws IOException
+     */
     private String decodeInputStreamBody(Response.Body body) throws IOException {
         if (body == null) {
             return null;

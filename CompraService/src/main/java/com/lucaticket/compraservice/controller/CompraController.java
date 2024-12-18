@@ -14,6 +14,9 @@ import com.lucaticket.compraservice.service.CompraService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Angel
+ */
 @Slf4j
 @RestController
 public class CompraController {

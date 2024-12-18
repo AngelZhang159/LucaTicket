@@ -31,6 +31,9 @@ import com.lucaticket.compraservice.error.exception.InvalidDataException;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * @author Raul, Alberto, Angel, Yuji
+ */
 @RestControllerAdvice
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 

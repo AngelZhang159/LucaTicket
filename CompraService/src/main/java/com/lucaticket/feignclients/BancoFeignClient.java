@@ -12,6 +12,9 @@ import com.lucaticket.compraservice.model.dto.CompraRequest;
 import com.lucaticket.compraservice.model.dto.ValidarCompraResponse;
 import com.lucaticket.compraservice.model.dto.ValidarUserResponse;
 
+/**
+ * @author Angel
+ */
 @FeignClient(name = "bank", url = "http://banco.eu-west-3.elasticbeanstalk.com", configuration = FeignConfig.class)
 public interface BancoFeignClient {
 

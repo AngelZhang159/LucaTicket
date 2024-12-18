@@ -1,5 +1,8 @@
 package com.lucaticket.compraservice.error.exception;
 
+/**
+ * Utilizada cuando el servicio de banco no está disponible
+ */
 public class BancoNoDisponibleException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 

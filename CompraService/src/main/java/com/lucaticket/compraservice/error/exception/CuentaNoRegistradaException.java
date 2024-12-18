@@ -1,5 +1,8 @@
 package com.lucaticket.compraservice.error.exception;
 
+/**
+ * Utilizada cuando no hay una cuenta registrada con las credenciales recibidas
+ */
 public class CuentaNoRegistradaException extends RuntimeException {
 	/**
 	 * 

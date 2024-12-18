@@ -13,6 +13,9 @@ import org.springframework.web.context.request.WebRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Raul, Angel, Alberto, Yuji
+ */
 @Component
 @Slf4j
 public class CustomErrorAttributes extends DefaultErrorAttributes {

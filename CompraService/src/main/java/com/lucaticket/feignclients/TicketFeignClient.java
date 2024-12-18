@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.lucaticket.compraservice.model.dto.TicketRequest;
 import com.lucaticket.compraservice.model.dto.TicketResponse;
 
-
+/**
+ * @author Angel
+ */
 @FeignClient(name = "ticket")
 public interface TicketFeignClient {
 	

@@ -7,6 +7,11 @@ import com.lucaticket.compraservice.model.dto.CompraResponse;
 
 public interface CompraService {
 
+	/**
+	 * @author Raul, Angel, Yuji, Alberto
+	 * @param compraRequest
+	 * @return
+	 */
 	ResponseEntity<CompraResponse> buy(CompraRequest compraRequest);
 	
 }

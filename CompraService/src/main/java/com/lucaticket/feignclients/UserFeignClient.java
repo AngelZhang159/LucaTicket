@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.lucaticket.compraservice.config.FeignConfig;
 import com.lucaticket.compraservice.model.dto.UserResponse;
 
+/**
+ * @author Raul
+ */
 @FeignClient(name = "user", configuration = FeignConfig.class)
 public interface UserFeignClient {
 

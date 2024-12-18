@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Angel
+ */
 // CLASE SIMILAR A LA DE ERRORES PERO CON CAMBIOS EN FECHA Y CAMPO AÑADIDO
 public class CustomErrorJson {
 

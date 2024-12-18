@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+/**
+ * @author Angel
+ */
 @OpenAPIDefinition(
 		info = @Info(
 				contact = @Contact(

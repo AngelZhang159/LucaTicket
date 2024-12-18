@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.lucaticket.compraservice.config.FeignConfig;
 import com.lucaticket.compraservice.model.dto.DetailedEventResponse;
 
+/**
+ * @author Angel
+ */
 @FeignClient(name = "event", configuration = FeignConfig.class)
 public interface EventFeignClient {
 

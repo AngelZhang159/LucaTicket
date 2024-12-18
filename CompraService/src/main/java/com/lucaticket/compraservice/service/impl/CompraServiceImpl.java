@@ -42,6 +42,12 @@ public class CompraServiceImpl implements CompraService {
 	private final TicketFeignClient ticketFeign;
 	private final UserFeignClient userFeign;
 
+	/**
+     * Realiza el proceso completo de compra.
+     * 
+     * @param compraRequest Datos de la solicitud de compra.
+     * @return Respuesta con los detalles de la compra realizada.
+     */
 	@Override
 	public ResponseEntity<CompraResponse> buy(CompraRequest compraRequest) {
 		
@@ -60,6 +66,11 @@ public class CompraServiceImpl implements CompraService {
 				detailedEventResponse.getBody().getEventDate()));
 	}
 
+	/**
+     * Guarda un ticket en la base de datos.
+     * 
+     * @param compraRequest Datos de la solicitud de compra.
+     */
 	private void saveTicket(CompraRequest compraRequest) {
 		log.info("Guardando ticket de la compra: " + compraRequest.toString());
 		ResponseEntity<TicketResponse> ticketResponse = ticketFeign
@@ -71,6 +82,12 @@ public class CompraServiceImpl implements CompraService {
 		log.info("Ticket guardado con éxito");
 	}
 	
+	/**
+     * Verifica si existe una cuenta registrada para el email proporcionado.
+     * 
+     * @param email Email del usuario.
+     * @throws CuentaNoRegistradaException Si no existe una cuenta registrada con el email.
+     */
 	private void comprobarCuenta(String email) {
 		log.info("Comprobando si existe una cuenta registrada con el email" + email);
 		if(userFeign.getUser(email).getStatusCode() != HttpStatus.ACCEPTED) {
@@ -80,6 +97,14 @@ public class CompraServiceImpl implements CompraService {
 		}
 	}
 
+	/**
+     * Valida los datos de una compra con el servicio del banco.
+     * 
+     * @param compraRequest Datos de la compra.
+     * @param detailedEventResponse Detalles del evento.
+     * @param validarUserResponse Validación del usuario.
+     * @throws DatosCompraInvalidosException Si la validación falla.
+     */
 	private void validatePurchase(CompraRequest compraRequest,
 			ResponseEntity<DetailedEventResponse> detailedEventResponse,
 			ResponseEntity<ValidarUserResponse> validarUserResponse) {
@@ -98,6 +123,12 @@ public class CompraServiceImpl implements CompraService {
 		log.info("Compra validada con éxito");
 	}
 
+	 /**
+     * Valida al usuario con el servicio del banco.
+     * 
+     * @return Respuesta de validación del usuario.
+     * @throws DatosInvalidosException Si las credenciales del usuario son incorrectas.
+     */
 	private ResponseEntity<ValidarUserResponse> validateUser() {
 		log.info("Validando usuario con el banco, user:" + ValidUser.name + ", password" + ValidUser.password);
 		ResponseEntity<ValidarUserResponse> validarUserResponse = bancoFeign.validarUser(ValidUser.name,
@@ -110,6 +141,13 @@ public class CompraServiceImpl implements CompraService {
 		return validarUserResponse;
 	}
 
+	/**
+     * Comprueba si un evento existe en el sistema.
+     * 
+     * @param compraRequest Datos de la solicitud de compra.
+     * @return Respuesta con los detalles del evento.
+     * @throws EventoNotFoundException Si el evento no existe.
+     */
 	private ResponseEntity<DetailedEventResponse> eventExists(CompraRequest compraRequest) {
 		log.info("Comprobando evento con ID: " + compraRequest.getIdEvento());
 		ResponseEntity<DetailedEventResponse> detailedEventResponse = eventFeign.getDetail(compraRequest.getIdEvento());
@@ -121,6 +159,13 @@ public class CompraServiceImpl implements CompraService {
 		return detailedEventResponse;
 	}
 
+	/**
+     * Rellena los datos faltantes de una solicitud de compra.
+     * 
+     * @param compraRequest Datos de la solicitud de compra.
+     * @param detailedEventResponse Detalles del evento.
+     * @return Solicitud de compra con los datos completos.
+     */
 	private CompraRequest rellenarDatos(CompraRequest compraRequest, DetailedEventResponse detailedEventResponse) {
 		Random aleatorio = new Random();
 
