@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.lucaticket.ticketservice.error.exception.NoTicketsFoundException;
+import com.lucaticket.ticketservice.error.exception.TicketAlreadyExistsException;
+import com.lucaticket.ticketservice.error.exception.TicketNotFoundException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
