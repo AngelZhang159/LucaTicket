@@ -15,6 +15,7 @@ import com.lucaticket.ticketservice.model.dto.TicketRequest;
 import com.lucaticket.ticketservice.model.dto.TicketResponse;
 import com.lucaticket.ticketservice.service.TicketService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class TicketController {
 	 *         ha guardado
 	 */
 	@PostMapping
+	@Operation(description = "Guarda un ticket en la base de datos a partir de una peticion ticketRequest con todos los datos necesarios")
 	ResponseEntity<TicketResponse> save(@RequestBody @Valid TicketRequest ticketRequest ) {
 		log.info("Controller: Guardando nuevo ticket: " + ticketRequest.toString());
 		return ticketService.save(ticketRequest);
@@ -44,6 +46,7 @@ public class TicketController {
 	 * @return una lista con todos los tickets registrados
 	 */
 	@GetMapping
+	@Operation(description = "Lista todos los tickets guardados en la base de datos")
 	public
 	ResponseEntity<List<TicketResponse>> listTickets() {
 		log.info("Controller: Listando todos los tickets:");
@@ -59,6 +62,7 @@ public class TicketController {
 	 */
 	
 	@GetMapping("/list/mail/{mail}")
+	@Operation(description = "Lista todos los tickets guardados en la base de datos filtrando por el email")
 	public ResponseEntity<List<DetailedTicketResponse>> getTickets(@PathVariable String mail){
 		log.info("Controller: Obteniendo nuevo ticket para el correo: " + mail);
 		return ticketService.listTicketsByEmail(mail);
