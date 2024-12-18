@@ -1,7 +1,6 @@
 package com.lucaticket.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,6 +13,7 @@ import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,14 +27,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.lucaticket.event.controller.EventController;
+import com.lucaticket.event.error.EventNotFoundException;
 import com.lucaticket.event.error.InvalidDataException;
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.dto.DetailedEventResponse;
-import com.lucaticket.event.model.dto.EventDTO;
 import com.lucaticket.event.model.dto.EventCreateDelete;
+import com.lucaticket.event.model.dto.EventDTO;
 import com.lucaticket.event.model.dto.EventRequest;
 import com.lucaticket.event.model.dto.EventResponse;
 import com.lucaticket.event.model.enums.Genre;
@@ -45,10 +48,13 @@ import com.lucaticket.event.service.impl.EventServiceImpl;
 class EventApplicationTests {
 	// <-- Atributos -->
 
-	@InjectMocks
+	@Autowired
+	private EventController eventController;
+
+	@Autowired
 	private EventServiceImpl eventService;
 
-	@Mock
+	@MockBean
 	private EventRepository eventRepository;
 
 	@BeforeEach
@@ -92,9 +98,10 @@ class EventApplicationTests {
 	void saveEvent_should_return_saved_event() {
 		// <-- Atributos -->
 		LocalDateTime dateTime = LocalDateTime.of(2025, 5, 20, 18, 00);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
 
-		EventRequest peticionEvento = new EventRequest("Galacticon", "Una emocionante aventura", dateTime, 10.00, 20.00,
-				"Madrid", "Wizink", Genre.METAL);
+		EventRequest peticionEvento = new EventRequest("Galacticon", "Una emocionante aventura",
+				dateTime.format(formatter), 10.00, 20.00, "Madrid", "Wizink", Genre.METAL);
 		Event evento = peticionEvento.toEntity();
 
 		// <-- MOCKING ->>
@@ -115,6 +122,7 @@ class EventApplicationTests {
 		invalidEvent.setName(""); // nombre vacio
 		invalidEvent.setEventDate(null); // fecha nula
 		invalidEvent.setMinPrice(-5.0);// precio minimo negativo
+		invalidEvent.setMaxPrice(-50.0);// precio minimo negativo
 
 		when(eventRepository.save(any(Event.class))).thenThrow(InvalidDataException.class);
 
@@ -203,10 +211,10 @@ class EventApplicationTests {
 	 *         no existe
 	 */
 	@Test
-	void should_return_404_when_event_doesnt_exists_when_get_detailed_event() {
-		when(eventRepository.findByName(any(String.class))).thenThrow(InvalidDataException.class);
+	void should_throw_exception_when_event_doesnt_exists_when_get_detailed_event() {
+		when(eventRepository.findByName(any(String.class))).thenThrow(EventNotFoundException.class);
 
-		assertThrows(InvalidDataException.class, () -> eventService.getDetailedInfoEvent(123123L),
+		assertThrows(EventNotFoundException.class, () -> eventService.getDetailedInfoEvent(123123L),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
 
@@ -216,12 +224,16 @@ class EventApplicationTests {
 	 */
 	@Test
 	void should_return_200_whenEventWithNameExists() {
-		Event evento1 = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
+		Event evento = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
 
-		when(eventRepository.save(any(Event.class))).thenReturn(evento1);
+		EventRequest evento1 = new EventRequest("Metal Militia", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0).format(formatter), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
 
-		ResponseEntity<EventCreateDelete> entity = eventService.saveEvent(new EventRequest());
+		when(eventRepository.save(any(Event.class))).thenReturn(evento);
+
+		ResponseEntity<EventCreateDelete> entity = eventService.saveEvent(evento1);
 
 		assertEquals(HttpStatus.OK, entity.getStatusCode());
 
@@ -269,8 +281,8 @@ class EventApplicationTests {
 	}
 
 	/**
-	 * @author Raul
-	 * testea que el tamaño de la lista de los eventos es la misma antes y despues del update
+	 * @author Raul testea que el tamaño de la lista de los eventos es la misma
+	 *         antes y despues del update
 	 */
 	@Test
 	void event_list_size_should_remain_the_same_after_update() {
@@ -280,95 +292,96 @@ class EventApplicationTests {
 		Event evento1 = new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
 		eventosBase.add(evento1);
-		
-		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
-				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
-		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
-				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
+
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+
+		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+
 		when(eventRepository.save(any(Event.class))).thenReturn(eventoUpdate);
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
 		when(eventRepository.findAll()).thenReturn(eventosBase);
-		
+
 		ResponseEntity<Map<String, Object>> respuesta = eventService.updateEvent(eventoUpdateDto);
 		ResponseEntity<List<EventResponse>> listaRespuesta = eventService.getEvents();
-		
-		
+
 		assertEquals(1, listaRespuesta.getBody().size());
 	}
 
 	/**
-	 * @author Raul
-	 * testea que devuelve un 200 al actualizar correctamente
+	 * @author Raul testea que devuelve un 200 al actualizar correctamente
 	 */
 	@Test
 	void should_return_200_on_update() {
 		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
-		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
-				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
-		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
-				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+
+		Event eventoUpdate = new Event(1, "Hit the Lights", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+
 		when(eventRepository.save(any(Event.class))).thenReturn(eventoUpdate);
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
-		
+
 		ResponseEntity<Map<String, Object>> respuesta = eventService.updateEvent(eventoUpdateDto);
-		
+
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}
-	
+
 	/**
-	 * @author Raul
-	 * testea que se tira la excepcion cuando los datos introducidos son invalidos
+	 * @author Raul testea que se tira la excepcion cuando los datos introducidos
+	 *         son invalidos
 	 */
 	@Test
 	void should_throw_invalid_data_exception_on_wrong_data_when_update() {
 		Optional<Event> evento = Optional.ofNullable(new Event(1, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
-		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal", LocalDateTime.of(2025, 8, 12, 12, 0),
-				10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
-		
+		EventDTO eventoUpdateDto = new EventDTO(1, "Hit the Lights", "Tus grupos favoritos de metal",
+				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL);
+
 		when(eventRepository.findById(any(Long.class))).thenReturn(evento);
 		when(eventRepository.save(any(Event.class))).thenThrow(InvalidDataException.class);
 
 		assertThrows(InvalidDataException.class, () -> eventService.updateEvent(eventoUpdateDto),
 				"Debería lanzarse InvalidDataException cuando el DTO tiene datos inválidos.");
 	}
-	
+
 	/**
-	 * @author Alberto de la Blanca testea que realmente se ha borrado el evento de la base de datos
+	 * @author Alberto de la Blanca testea que realmente se ha borrado el evento de
+	 *         la base de datos
 	 */
-	
+
 	@Test
 	void test_delete_event() {
-		//evento de prueba
+		// evento de prueba
 		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
-		
+
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
-		
+
 		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
-		
+
 		when(eventRepository.findById(any(Long.class))).thenReturn(null);
-		
+
 		Optional<Event> deletedEvent = eventRepository.findById(respuesta.getBody().getId());
 		assertNull(deletedEvent);
 	}
+
 	/**
-	 * @author Alberto de la Blanca testea que al borrar un evento, devolver un 200 si se ha borrado con exito
+	 * @author Alberto de la Blanca testea que al borrar un evento, devolver un 200
+	 *         si se ha borrado con exito
 	 */
 	@Test
 	void testDeleteEventReturns200() {
 		Optional<Event> event = Optional.ofNullable(new Event(122, "Metal Militia", "Tus grupos favoritos de metal",
 				LocalDateTime.of(2025, 8, 12, 12, 0), 10.0, 20.0, "Madrid", "Wizing", Genre.METAL));
-		
+
 		when(eventRepository.findById(any(Long.class))).thenReturn(event);
-		
+
 		ResponseEntity<EventCreateDelete> respuesta = eventService.deleteEvent(event.get().getId());
-		
+
 		assertEquals(HttpStatus.OK, respuesta.getStatusCode());
 	}
 

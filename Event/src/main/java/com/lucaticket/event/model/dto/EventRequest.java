@@ -1,12 +1,14 @@
 package com.lucaticket.event.model.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.lucaticket.event.model.Event;
 import com.lucaticket.event.model.enums.Genre;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -47,8 +49,9 @@ public class EventRequest {
 	/**
 	 * Fecha y hora en la que se llevará a cabo el evento.
 	 */
-	@NotNull(message = "La fecha del evento no debe de ser nulo")
-	private LocalDateTime eventDate;
+	@NotBlank(message = "La fecha del evento no debe de ser nulo")
+	@Pattern(regexp = "\\((0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/(202[4-9]|20[3-9]\\d|2[1-9]\\d{2}) (0?\\d|1\\d|2[0-3]):([0-5]?\\d)\\)\r\n", message = "Error en el formato de la fecha, ej: (31/12/2024 23:59) ")
+	private String eventDate;
 
 	/**
 	 * Precio mínimo del evento. Debe ser un valor positivo y no puede ser nulo.
@@ -98,9 +101,11 @@ public class EventRequest {
 	public Event toEntity() {
 		Event event = new Event();
 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
+
 		event.setName(this.name);
 		event.setDescription(this.description);
-		event.setEventDate(this.eventDate);
+		event.setEventDate(LocalDateTime.parse(this.eventDate, formatter));
 		event.setMinPrice(this.minPrice);
 		event.setMaxPrice(this.maxPrice);
 		event.setVenueName(this.venueName);

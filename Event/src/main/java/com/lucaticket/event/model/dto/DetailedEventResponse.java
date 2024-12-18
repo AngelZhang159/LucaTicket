@@ -1,7 +1,5 @@
 package com.lucaticket.event.model.dto;
 
-import java.time.LocalDateTime;
-
 import com.lucaticket.event.model.enums.Genre;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +28,7 @@ public class DetailedEventResponse {
     private String description;
 
     /** Fecha y hora en la que se llevará a cabo el evento. */
-    private LocalDateTime eventDate;
+    private String eventDate;
 
     /** Precio mínimo de entrada para el evento. */
     private double minPrice;

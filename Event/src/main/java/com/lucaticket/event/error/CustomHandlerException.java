@@ -30,6 +30,12 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 		response.sendError(HttpStatus.BAD_REQUEST.value());
 	}
 
+	@ExceptionHandler(EventNotFoundException.class)
+	public void handleEventNotFound(HttpServletResponse response) throws IOException {
+		logger.info("------ DATOS INVALIDOS");
+		response.sendError(HttpStatus.NOT_FOUND.value());
+	}
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {

@@ -1,6 +1,7 @@
 package com.lucaticket.event.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 import com.lucaticket.event.model.dto.EventResponse;
@@ -74,9 +75,11 @@ public class Event {
 	public DetailedEventResponse toDetailedDto() {
 		DetailedEventResponse eventResponse = new DetailedEventResponse();
 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
+
 		eventResponse.setName(this.name);
 		eventResponse.setDescription(this.description);
-		eventResponse.setEventDate(this.eventDate);
+		eventResponse.setEventDate(this.eventDate.format(formatter));
 		eventResponse.setMinPrice(this.minPrice);
 		eventResponse.setMaxPrice(this.maxPrice);
 		eventResponse.setLocation(this.location);
