@@ -1,6 +1,7 @@
 package com.lucaticket.user.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.lucaticket.user.model.dto.DeleteUserResponse;
 import com.lucaticket.user.model.dto.UpdateUserResponse;
@@ -39,7 +40,7 @@ public class User {
 
         userResponse.setFullName(this.name + " " + this.lastName);
         userResponse.setMail(this.mail);
-        userResponse.setSignupDate(this.signupDate);
+        userResponse.setSignupDate(this.signupDate.format(DateTimeFormatter.ofPattern("(dd/MM/yyyy)")));
 
         return userResponse;
     }

@@ -1,6 +1,7 @@
 package com.lucaticket.user.model.dto;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.lucaticket.user.model.User;
 
@@ -14,13 +15,13 @@ import lombok.NoArgsConstructor;
 public class UserResponse {
 	private String fullName;
 	private String mail;
-	private LocalDate signupDate;
+	private String signupDate;
 	
 	public UserResponse toEntity(User user) {
 		UserResponse respuesta = new UserResponse();
 		respuesta.setFullName(user.getName() + " " + user.getLastName());
 		respuesta.setMail(user.getMail());
-		respuesta.setSignupDate(user.getSignupDate());
+		respuesta.setSignupDate(user.getSignupDate().format(DateTimeFormatter.ofPattern("(dd/MM/yyyy)")));
 		
 		return this;
 	}
