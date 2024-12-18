@@ -30,21 +30,5 @@ public class UserResponse {
 	private String mail;
 
 	/** Fecha de registro del usuario. */
-	private LocalDate signupDate;
-
-	/**
-	 * Convierte una entidad {@code User} en una instancia de {@code UserResponse}.
-	 * 
-	 * @param user La entidad {@code User} a convertir.
-	 * @return Una instancia de {@code UserResponse} con los datos mapeados desde la
-	 *         entidad.
-	 * @since 18-12-2024
-	 */
-	public static UserResponse toDto(User user) {
-		UserResponse respuesta = new UserResponse();
-		respuesta.setFullName(user.getName() + " " + user.getLastName());
-		respuesta.setMail(user.getMail());
-		respuesta.setSignupDate(user.getSignupDate());
-		return respuesta;
-	}
+	private String signupDate;
 }
