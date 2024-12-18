@@ -13,7 +13,6 @@ import java.sql.DatabaseMetaData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,12 +21,11 @@ import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -65,6 +63,9 @@ class EventApplicationTests {
 	@Autowired
 	private DataSource dataSource;
 
+	@Autowired
+	private Environment enviroment;
+
 	// @Olivord
 	@Test
 	void configureDatabaseConnection_shouldSucceed() {
@@ -82,7 +83,7 @@ class EventApplicationTests {
 			String databaseUser = metaData.getUserName();
 
 			// Valida que el URL coincide con la configuración proporcionada
-			assertEquals("jdbc:mysql://junction.proxy.rlwy.net:25537/lucatickect?useSSL=false&serverTimezone=UTC",
+			assertEquals(enviroment.getProperty("spring.datasource.url"),
 					databaseUrl, "El URL de la base de datos debería coincidir con la configuración proporcionada.");
 
 			// Valida que el usuario contiene "root"
