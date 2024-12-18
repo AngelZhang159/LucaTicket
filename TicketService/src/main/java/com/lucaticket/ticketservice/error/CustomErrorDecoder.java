@@ -2,7 +2,9 @@ package com.lucaticket.ticketservice.error;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
-
+/**
+ * @author Raul
+ */
 public class CustomErrorDecoder implements ErrorDecoder {
 	
 	private final ErrorDecoder defaultDecoder = new Default();

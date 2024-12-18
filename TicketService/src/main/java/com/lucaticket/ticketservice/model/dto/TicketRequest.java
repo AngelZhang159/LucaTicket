@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class TicketRequest {
 
 	/**
+	 * @author Angel
 	 * Correo electrónico del usuario asociado al ticket.
 	 */
 	@Email

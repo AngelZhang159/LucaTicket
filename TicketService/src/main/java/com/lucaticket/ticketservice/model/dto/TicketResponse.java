@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TicketResponse {
 
+	/**
+	 * @author Alberto de la Blanca
+	 * **/
 	private Long id;
 	/**
 	 * Correo electrónico del usuario asociado al ticket.

@@ -11,11 +11,11 @@ import com.lucaticket.ticketservice.model.dto.TicketResponse;
 public interface TicketService {
 
 	/**
-	 * Guarda un nuevo ticket
 	 * 
 	 * @author Angel
 	 * @param ticketRequest
 	 * @return
+	 * * Guarda un nuevo ticket
 	 */
 
 	ResponseEntity<TicketResponse> save(TicketRequest ticketRequest);
