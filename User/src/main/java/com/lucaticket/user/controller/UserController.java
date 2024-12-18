@@ -17,6 +17,7 @@ import com.lucaticket.user.model.dto.UserRequest;
 import com.lucaticket.user.model.dto.UserResponse;
 import com.lucaticket.user.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,6 +37,7 @@ public class UserController {
 	 */
 
 	@PostMapping("/save")
+	@Operation(description = "Guarda un usuario en la base de datos a partir de una peticion userRequest con todos los datos necesarios")
 	public ResponseEntity<UserResponse> saveUser(@RequestBody @Valid UserRequest userRequest) {
 		return userService.saveUser(userRequest);
 	}
@@ -47,6 +49,7 @@ public class UserController {
 	 */
 
 	@GetMapping("/{email}")
+	@Operation(description = "Devuelve un usuario específico buscando por 'email'")
 	public ResponseEntity<UserResponse> getUser(
 			@PathVariable @Email(message = "El email debe de tener un formato correcto") @NotBlank(message = "El email no puede estar vacio en /user/{email}") String email) {
 		return userService.getUser(email);
@@ -60,6 +63,7 @@ public class UserController {
 	 */
 
 	@PutMapping("update")
+	@Operation(description = "Actualiza un usuario existente a partir de una peticion updateUserRequest con los atributos necesarios")
 	public ResponseEntity<UpdateUserResponse> update(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
 		return userService.update(updateUserRequest.getEmail(), updateUserRequest);
 	}
@@ -71,6 +75,7 @@ public class UserController {
 	 */
 
 	@DeleteMapping("delete/{email}")
+	@Operation(description = "Borra un usuario de la base de datos a partir de un email")
 	public ResponseEntity<DeleteUserResponse> delete(@PathVariable @Email @NotBlank String email) {
 		return userService.delete(email);
 	}
