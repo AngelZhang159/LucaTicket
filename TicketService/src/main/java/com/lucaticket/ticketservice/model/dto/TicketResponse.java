@@ -22,6 +22,11 @@ public class TicketResponse {
 	 * Identificador del evento al que pertenece este ticket.
 	 */
 	private Long idEvent;
+	
+	/**
+	 * precio del evento
+	 */
+	private Double price;
 
 	/*
 	 * Precio del ticket

@@ -30,6 +30,10 @@ public class TicketRequest {
 	@NotNull(message = "El id del evento no debe de ser nulo")
 	private Long idEvent;
 
+	@Positive(message = "El precio debe ser positivo")
+	@NotNull(message = "El precio no puede estar vacio")
+	private Double price;
+	
 	/**
 	 * Precio del ticket
 	 */

@@ -43,12 +43,16 @@ public class Ticket {
 	private double price;
 
 	/**
+	 * precio del evento
+	 */
+	private Double price;
+
+	/**
 	 * Mapper a DTO para la respuesta
 	 * 
 	 * @author Angel
 	 * @return el ticket DTO response
 	 */
-
 	public TicketResponse toDTO() {
 
 		TicketResponse response = new TicketResponse();
