@@ -113,8 +113,8 @@ class TicketServiceApplicationTests {
 	public void test_GetTicketsByMail_Matches_Satabase_Size() {
         // Configurar el mock para devolver tickets específicos por email
         when(ticketRepository.findByEmail("user1@example.com")).thenReturn(List.of(
-            new Ticket(1L, "user1@example.com", 1L, 50.0),
-            new Ticket(3L, "user1@example.com", 3L, 50.0)
+            new Ticket(1L, "user1@example.com", 1L),
+            new Ticket(3L, "user1@example.com", 3L)
         ));
 
         // Llamar al método con un correo específico

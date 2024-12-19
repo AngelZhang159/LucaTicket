@@ -19,7 +19,7 @@ public class TicketRequest {
 	 * @author Angel
 	 * Correo electrónico del usuario asociado al ticket.
 	 */
-	@Email
+	@Email(message = "El email no es válido")
 	@NotBlank(message = "El email no debe estar vacío")
 	private String email;
 
@@ -34,6 +34,13 @@ public class TicketRequest {
 	@NotNull(message = "El precio no puede estar vacio")
 	private Double price;
 	
+	/**
+	 * Precio del ticket
+	 */
+	@Positive(message = "El precio debe ser positivo")
+	@NotNull(message = "El precio no puede estar vacio")
+	private Double price;
+
 	/**
 	 * Mapper request a entidad
 	 * 

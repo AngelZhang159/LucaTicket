@@ -28,4 +28,8 @@ public class TicketResponse {
 	 */
 	private Double price;
 
+	/*
+	 * Precio del ticket
+	 */
+	private double price;
 }

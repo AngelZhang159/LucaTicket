@@ -40,6 +40,8 @@ public class Ticket {
 	 */
 	private Long idEvent;
 
+	private double price;
+
 	/**
 	 * precio del evento
 	 */
