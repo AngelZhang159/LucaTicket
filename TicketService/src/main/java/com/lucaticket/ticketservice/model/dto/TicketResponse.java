@@ -27,9 +27,4 @@ public class TicketResponse {
 	 * precio del evento
 	 */
 	private Double price;
-
-	/*
-	 * Precio del ticket
-	 */
-	private double price;
 }

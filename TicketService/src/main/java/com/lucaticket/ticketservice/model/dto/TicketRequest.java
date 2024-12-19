@@ -33,13 +33,6 @@ public class TicketRequest {
 	@Positive(message = "El precio debe ser positivo")
 	@NotNull(message = "El precio no puede estar vacio")
 	private Double price;
-	
-	/**
-	 * Precio del ticket
-	 */
-	@Positive(message = "El precio debe ser positivo")
-	@NotNull(message = "El precio no puede estar vacio")
-	private Double price;
 
 	/**
 	 * Mapper request a entidad
