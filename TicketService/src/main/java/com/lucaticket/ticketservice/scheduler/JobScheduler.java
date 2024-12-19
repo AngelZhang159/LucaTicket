@@ -20,7 +20,7 @@ public class JobScheduler {
     @Autowired
     private Job processTicketsJob;
 
-    @Scheduled(fixedRate = 20000) // Ejecuta cada 60 segundos
+    @Scheduled(fixedRate = 60000) // Ejecuta cada 60 segundos
     public void scheduleJob() {
         try {
             JobParameters params = new JobParametersBuilder()
