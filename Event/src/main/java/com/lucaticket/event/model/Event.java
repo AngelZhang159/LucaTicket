@@ -75,7 +75,7 @@ public class Event {
 	public DetailedEventResponse toDetailedDto() {
 		DetailedEventResponse eventResponse = new DetailedEventResponse();
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 		eventResponse.setName(this.name);
 		eventResponse.setDescription(this.description);

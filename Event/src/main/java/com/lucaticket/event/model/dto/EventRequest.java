@@ -50,7 +50,6 @@ public class EventRequest {
 	 * Fecha y hora en la que se llevará a cabo el evento.
 	 */
 	@NotBlank(message = "La fecha del evento no debe de ser nulo")
-	@Pattern(regexp = "\\((0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/(202[4-9]|20[3-9]\\d|2[1-9]\\d{2}) (0?\\d|1\\d|2[0-3]):([0-5]?\\d)\\)\r\n", message = "Error en el formato de la fecha, ej: (31/12/2024 23:59) ")
 	private String eventDate;
 
 	/**
@@ -101,7 +100,7 @@ public class EventRequest {
 	public Event toEntity() {
 		Event event = new Event();
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("(dd/MM/yyyy HH:mm)");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 		event.setName(this.name);
 		event.setDescription(this.description);
