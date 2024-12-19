@@ -30,6 +30,10 @@ public class TicketRequest {
 	@NotNull(message = "El id del evento no debe de ser nulo")
 	private Long idEvent;
 
+	@Positive(message = "El precio debe ser positivo")
+	@NotNull(message = "El precio no puede estar vacio")
+	private Double price;
+	
 	/**
 	 * Mapper request a entidad
 	 * 
@@ -40,6 +44,7 @@ public class TicketRequest {
 		Ticket ticket = new Ticket();
 		ticket.setEmail(this.email);
 		ticket.setIdEvent(this.idEvent);
+		ticket.setPrice(this.price);
 		return ticket;
 	}
 

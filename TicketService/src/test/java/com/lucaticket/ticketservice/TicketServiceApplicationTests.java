@@ -49,8 +49,8 @@ class TicketServiceApplicationTests {
 	public void test_List_Ticket_Matches_Database_Size() {
         // Configurar el comportamiento del mock
         when(ticketRepository.findAll()).thenReturn(List.of(
-            new Ticket(1L, "user1@example.com", 1L),
-            new Ticket(2L, "user2@example.com", 2L)
+            new Ticket(1L, "user1@example.com", 1L, 50.0),
+            new Ticket(2L, "user2@example.com", 2L, 50.0)
         ));
 
         // Llamar al controlador para listar los tickets
@@ -113,8 +113,8 @@ class TicketServiceApplicationTests {
 	public void test_GetTicketsByMail_Matches_Satabase_Size() {
         // Configurar el mock para devolver tickets específicos por email
         when(ticketRepository.findByEmail("user1@example.com")).thenReturn(List.of(
-            new Ticket(1L, "user1@example.com", 1L),
-            new Ticket(3L, "user1@example.com", 3L)
+            new Ticket(1L, "user1@example.com", 1L, 50.0),
+            new Ticket(3L, "user1@example.com", 3L, 50.0)
         ));
 
         // Llamar al método con un correo específico
