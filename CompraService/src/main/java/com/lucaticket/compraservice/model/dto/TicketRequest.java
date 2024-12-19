@@ -18,4 +18,9 @@ public class TicketRequest {
 	 * Identificador del evento al que pertenece este ticket.
 	 */
 	private Long idEvent;
+	
+	/**
+	 *  precio del ticket
+	 */
+	private Double price;
 }

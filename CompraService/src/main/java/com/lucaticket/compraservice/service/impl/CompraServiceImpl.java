@@ -74,7 +74,7 @@ public class CompraServiceImpl implements CompraService {
 	private void saveTicket(CompraRequest compraRequest) {
 		log.info("Guardando ticket de la compra: " + compraRequest.toString());
 		ResponseEntity<TicketResponse> ticketResponse = ticketFeign
-				.save(new TicketRequest(compraRequest.getEmail(), compraRequest.getIdEvento()));
+				.save(new TicketRequest(compraRequest.getEmail(), compraRequest.getIdEvento(), compraRequest.getCantidad()));
 
 		if (ticketResponse.getStatusCode() != HttpStatus.OK) {
 			log.info("Error al guardar el ticket en la base de datos: " + ticketResponse.getBody());

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lucaticket.compraservice.model.dto.CompraRequest;
@@ -20,12 +21,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
+@RequestMapping("/compra")
 public class CompraController {
 
 	@Autowired
 	CompraService compraService;
 	
-	@PostMapping("/ticket/{idEvento}") 
+	@PostMapping("/buy/{idEvento}") 
 	@Operation(description = "Realiza la compra de un ticket para un evento a partir del ID de evento y una peticion de compra")
 	ResponseEntity<CompraResponse> buy(@PathVariable Long idEvento, @RequestBody @Valid CompraRequest compraRequest) {
 		compraRequest.setIdEvento(idEvento);
