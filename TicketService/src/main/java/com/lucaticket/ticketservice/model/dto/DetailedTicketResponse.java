@@ -1,7 +1,5 @@
 package com.lucaticket.ticketservice.model.dto;
 
-import java.time.LocalDateTime;
-
 import com.lucaticket.event.model.dto.DetailedEventResponse;
 
 import lombok.AllArgsConstructor;
@@ -23,5 +21,6 @@ public class DetailedTicketResponse {
     private Long ticketId;
     private String email;
     private DetailedEventResponse eventDetails;
+    private double price;
 
 }

@@ -85,7 +85,8 @@ public class TicketServiceImpl implements TicketService {
 			return new DetailedTicketResponse(
 					ticket.getId(), // ID del ticket
 					ticket.getEmail(), // Correo electrónico
-					eventDetails // Información del evento
+					eventDetails, // Información del evento
+					ticket.getPrice()
 			);
 		}).toList();
 

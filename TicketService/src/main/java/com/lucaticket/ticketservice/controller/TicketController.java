@@ -1,7 +1,18 @@
 package com.lucaticket.ticketservice.controller;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,5 +78,26 @@ public class TicketController {
 		log.info("Controller: Obteniendo nuevo ticket para el correo: " + mail);
 		return ticketService.listTicketsByEmail(mail);
 	}
+
+
+	@Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job processTicketsJob;
+
+    @GetMapping("/start-job")
+    public String startJob() {
+        try {
+            JobParameters params = new JobParametersBuilder()
+                    .addLong("time", System.currentTimeMillis()) // Parámetro único basado en el tiempo
+                    .addString("uniqueId", UUID.randomUUID().toString()) // Agrega un identificador único
+                    .toJobParameters();
+            JobExecution execution = jobLauncher.run(processTicketsJob, params);
+            return "Job Status: " + execution.getStatus();
+        } catch (JobParametersInvalidException | JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException | JobRestartException e) {
+            return "Job failed: " + e.getMessage();
+        }
+    }
 
 }

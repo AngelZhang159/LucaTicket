@@ -19,7 +19,7 @@ public class TicketRequest {
 	 * @author Angel
 	 * Correo electrónico del usuario asociado al ticket.
 	 */
-	@Email
+	@Email(message = "El email no es válido")
 	@NotBlank(message = "El email no debe estar vacío")
 	private String email;
 
@@ -31,6 +31,13 @@ public class TicketRequest {
 	private Long idEvent;
 
 	/**
+	 * Precio del ticket
+	 */
+	@Positive(message = "El precio debe ser positivo")
+	@NotNull(message = "El precio no puede estar vacio")
+	private Double price;
+
+	/**
 	 * Mapper request a entidad
 	 * 
 	 * @author Angel
@@ -40,6 +47,7 @@ public class TicketRequest {
 		Ticket ticket = new Ticket();
 		ticket.setEmail(this.email);
 		ticket.setIdEvent(this.idEvent);
+		ticket.setPrice(this.price);
 		return ticket;
 	}
 

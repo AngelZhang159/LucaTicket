@@ -23,4 +23,8 @@ public class TicketResponse {
 	 */
 	private Long idEvent;
 
+	/*
+	 * Precio del ticket
+	 */
+	private double price;
 }

@@ -40,6 +40,8 @@ public class Ticket {
 	 */
 	private Long idEvent;
 
+	private double price;
+
 	/**
 	 * Mapper a DTO para la respuesta
 	 * 
@@ -54,6 +56,7 @@ public class Ticket {
 		response.setId(this.id);
 		response.setEmail(this.email);
 		response.setIdEvent(this.idEvent);
+		response.setPrice(this.price);
 
 		return response;
 	}
