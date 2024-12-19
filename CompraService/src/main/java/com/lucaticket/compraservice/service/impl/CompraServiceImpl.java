@@ -171,10 +171,14 @@ public class CompraServiceImpl implements CompraService {
 
 		compraRequest.setEmisor("GRUPO 2 LUCATICKET");
 		compraRequest.setConcepto("EVENTO: [" + detailedEventResponse.getName() + "] ");
-		compraRequest.setCantidad(
-				aleatorio.nextDouble(detailedEventResponse.getMaxPrice() - detailedEventResponse.getMinPrice() + 1)
-						+ detailedEventResponse.getMinPrice());
+	
+		// Calcular precio aleatorio con 2 decimales
+		double precioAleatorio = aleatorio.nextDouble(detailedEventResponse.getMaxPrice() - detailedEventResponse.getMinPrice() + 1)
+				+ detailedEventResponse.getMinPrice();
+		double precioConDosDecimales = Math.round(precioAleatorio * 100.0) / 100.0;
 
+		compraRequest.setCantidad(precioConDosDecimales);
+	
 		return compraRequest;
-	}
+	}	
 }
